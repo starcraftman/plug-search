@@ -1,0 +1,68 @@
+{
+  "Valloric/YouCompleteMe": {
+    "desc": "Powerful code completion engine for C++, python and more.",
+    "suggests": [
+      "rdnetto/YCM-Generator"
+    ],
+    "tags": [
+      "completion",
+      "code-completion",
+      "c++",
+      "python"
+    ],
+    "opts": {
+      "do": "./install.py"
+    }
+  },
+  "rdnetto/YCM-Generator": {
+    "desc": "Generate config files for YouCompleteMe",
+    "tags": [
+      "autotools",
+      "c++",
+      "cmake",
+      "make",
+      "python",
+      "qmake"
+    ],
+    "opts": {
+      "branch": "stable"
+    }
+  },
+  "Shougo/neocomplete.vim": {
+    "desc": "Lua based code completion engine.",
+    "tags": [
+      "code-completion",
+      "completion",
+      "lua"
+    ]
+  },
+  "artur-shaik/vim-javacomplete2": {
+    "desc": "Code completion for Java programming.",
+    "tags": [
+      "code-completion",
+      "completion",
+      "java"
+    ]
+  },
+  "SirVer/ultisnips": {
+    "desc": "Python based code snippet engine.",
+    "suggests": [
+      "honza/vim-snippets"
+    ],
+    "tags": [
+      "python",
+      "snippets"
+    ]
+  },
+  "justinmk/vim-sneak": {
+    "alternatives": [
+      "easymotion/vim-easymotion"
+    ],
+    "desc": "Slick movement based on searching for characters.",
+    "tags": [
+      "motion",
+      "movement",
+      "search"
+    ]
+  }
+}

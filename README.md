@@ -14,3 +14,21 @@ Things it should do:
 - [ ] Provide some simple warnings of deprecations to users:
   - [ ] Example, user usessjl/ctrlp (inactive) -> notify about ctrlpvim/ctrlp (active)
   - [ ] Perhaps even detect when a plugin hasn't received a commit in x period and warn user?
+
+## Development
+
+To help people easily contribute/edit the json from vim.
+
+Handy vim plugins:
+- `Plug 'elzr/vim-json'`
+  - Nice highlihting and concealing for json files:
+- `Plug 'scrooloose/syntastic'`
+  - Live writing syntax checker using jsonlint:
+
+Handy programs:
+- jsonlint:
+  - Install: `sudo npm install jsonlint -g'
+  - Lints json files, integrates with syntastic.
+- [jq](https://stedolan.github.io/jq/).
+  - Compress database: `jq '.' -c db.json > db.json`
+  - Deompress/pretty database: `jq '.' db.json > db.json`
