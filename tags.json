@@ -1,0 +1,51 @@
+{
+  "autotools": [
+    "rdnetto/YCM-Generator"
+  ],
+  "c++": [
+    "rdnetto/YCM-Generator",
+    "Valloric/YouCompleteMe"
+  ],
+  "cmake": [
+    "rdnetto/YCM-Generator"
+  ],
+  "code-completion": [
+    "Shougo/neocomplete.vim",
+    "artur-shaik/vim-javacomplete2",
+    "Valloric/YouCompleteMe"
+  ],
+  "completion": [
+    "Shougo/neocomplete.vim",
+    "artur-shaik/vim-javacomplete2",
+    "Valloric/YouCompleteMe"
+  ],
+  "java": [
+    "artur-shaik/vim-javacomplete2"
+  ],
+  "lua": [
+    "Shougo/neocomplete.vim"
+  ],
+  "make": [
+    "rdnetto/YCM-Generator"
+  ],
+  "motion": [
+    "justinmk/vim-sneak"
+  ],
+  "movement": [
+    "justinmk/vim-sneak"
+  ],
+  "python": [
+    "rdnetto/YCM-Generator",
+    "Valloric/YouCompleteMe",
+    "SirVer/ultisnips"
+  ],
+  "qmake": [
+    "rdnetto/YCM-Generator"
+  ],
+  "search": [
+    "justinmk/vim-sneak"
+  ],
+  "snippets": [
+    "SirVer/ultisnips"
+  ]
+}
