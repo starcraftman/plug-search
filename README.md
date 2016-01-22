@@ -21,14 +21,20 @@ To help people easily contribute/edit the json from vim.
 
 Handy vim plugins:
 - `Plug 'elzr/vim-json'`
-  - Nice highlihting and concealing for json files:
+  - Nice highlihting and concealing for json files.
 - `Plug 'scrooloose/syntastic'`
-  - Live writing syntax checker using jsonlint:
+  - Live writing syntax checker using jsonlint.
+- Compress/decompress json inside vim easily (see jq below).
+```viml
+  nnoremap <Leader>jq :%!jq .<CR>                          
+  nnoremap <Leader>jQ :%!jq . -c<CR
+```
 
 Handy programs:
 - [jsonlint](https://github.com/zaach/jsonlint):
   - Install: `sudo npm install jsonlint -g`
   - Lints json files, integrates with syntastic.
 - [jq](https://stedolan.github.io/jq/).
+  - Install: `sudo apt-get install jq`
   - Compress database: `jq '.' -c db.json > db.json`
   - Deompress/pretty database: `jq '.' db.json > db.json`
