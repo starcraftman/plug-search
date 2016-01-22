@@ -26,8 +26,8 @@ Handy vim plugins:
   - Live writing syntax checker using jsonlint:
 
 Handy programs:
-- jsonlint:
-  - Install: `sudo npm install jsonlint -g'
+- [jsonlint](https://github.com/zaach/jsonlint):
+  - Install: `sudo npm install jsonlint -g`
   - Lints json files, integrates with syntastic.
 - [jq](https://stedolan.github.io/jq/).
   - Compress database: `jq '.' -c db.json > db.json`
