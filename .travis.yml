@@ -12,6 +12,4 @@ install: |
   cd $HOME
   npm install jsonlint
   cd $DIR
-script: |
-  jsonlint -q db.json
-  jsonlint -q tags.json
+script: ./tests/test.sh
