@@ -1,5 +1,7 @@
 # vim-plug-search
 
+[![Travis][TravisShield]][TravisDash]
+
 Placeholder for an idea I had as a semi-official extension to vim-plug.
 Based on a small snippet I remember seeing from junegunn completing from vim-awesome.
 I don't think it quite fits inside vim-plug given the db, so better as a plugin itself.
@@ -30,10 +32,16 @@ nnoremap <Leader>jQ :%!jq . -c<CR>
 ```
 
 Handy programs:
-- [jsonlint](https://github.com/zaach/jsonlint):
+- [jsonlint]:
   - Install: `sudo npm install jsonlint -g`
   - Lints json files, integrates with syntastic.
-- [jq](https://stedolan.github.io/jq/):
+- [jq]:
   - Install: `sudo apt-get install jq`
   - Compress database: `jq '.' -c db.json > db.json`
   - Deompress/pretty database: `jq '.' db.json > db.json`
+
+<!-- Links -->
+[TravisShield]: https://travis-ci.org/starcraftman/vim-plug-search.svg?branch=master
+[TravisDash]: https://travis-ci.org/starcraftman/pakit
+[jq]: https://stedolan.github.io/jq
+[jsonlint]: https://github.com/zaach/jsonlint
