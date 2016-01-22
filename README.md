@@ -11,7 +11,7 @@ Things it should do:
 - [ ] Provide some basic search via description/tags (i.e. PlugSearch).
 - [ ] Maintain a curated db of plugins with useful information. PRs welcome.
 - [ ] Provide completion for Plug lines from this db. Toggleable.
-- [ ] Generate a tags.json db from main db for finding related plugins.
+- [x] Generate a tags.json db from main db for finding related plugins.
 - [ ] Provide some simple warnings of deprecations to users:
   - [ ] Example, user using `sjl/ctrlp` (inactive) -> notify about `ctrlpvim/ctrlp` (active)
   - [ ] Perhaps even detect when a plugin hasn't received a commit in x period and warn user? Might be annoying.
