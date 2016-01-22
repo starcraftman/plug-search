@@ -27,7 +27,7 @@ Handy vim plugins:
 - Compress/decompress json inside vim easily (see jq below).
 ```viml
   nnoremap <Leader>jq :%!jq .<CR>                          
-  nnoremap <Leader>jQ :%!jq . -c<CR
+  nnoremap <Leader>jQ :%!jq . -c<CR>
 ```
 
 Handy programs:
