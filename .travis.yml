@@ -8,8 +8,10 @@ env:
     - DEPS=$HOME/node_modules
     - PATH=$DEPS/.bin:$PATH
 install: |
-  DIR=$(pwd)
-  cd $HOME
-  npm install jsonlint
-  cd $DIR
+  if [ ! -e "$DEPS/.bin/jsonlint" ]; then
+    DIR=$(pwd)
+    cd $HOME
+    npm install jsonlint
+    cd $DIR
+  fi
 script: ./tests/test.sh
