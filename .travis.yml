@@ -1,0 +1,10 @@
+language: python
+install: |
+  DIR=$(pwd)
+  cd $HOME
+  npm install jsonlint
+  PATH=$HOME/node_modules/.bin:$PATH
+  cd $DIR
+script: |
+  jsonlint -q db.json
+  jsonlint -q tags.json
