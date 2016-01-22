@@ -2,6 +2,10 @@
   "autotools": [
     "rdnetto/YCM-Generator"
   ],
+  "buffers": [
+    "kien/ctrlp.vim",
+    "ctrlpvim/ctrlp.vim"
+  ],
   "c++": [
     "rdnetto/YCM-Generator",
     "Valloric/YouCompleteMe"
@@ -19,6 +23,13 @@
     "artur-shaik/vim-javacomplete2",
     "Valloric/YouCompleteMe"
   ],
+  "inactive": [
+    "kien/ctrlp.vim"
+  ],
+  "indexing": [
+    "kien/ctrlp.vim",
+    "ctrlpvim/ctrlp.vim"
+  ],
   "java": [
     "artur-shaik/vim-javacomplete2"
   ],
@@ -34,6 +45,10 @@
   "movement": [
     "justinmk/vim-sneak"
   ],
+  "mru": [
+    "kien/ctrlp.vim",
+    "ctrlpvim/ctrlp.vim"
+  ],
   "python": [
     "rdnetto/YCM-Generator",
     "Valloric/YouCompleteMe",
@@ -45,7 +60,15 @@
   "search": [
     "justinmk/vim-sneak"
   ],
+  "searching": [
+    "kien/ctrlp.vim",
+    "ctrlpvim/ctrlp.vim"
+  ],
   "snippets": [
     "SirVer/ultisnips"
+  ],
+  "tags": [
+    "kien/ctrlp.vim",
+    "ctrlpvim/ctrlp.vim"
   ]
 }

@@ -1,19 +1,17 @@
 # vim-plug-search
 
-Placeholder for an idea I had as a semi-official extension.
-Shouldn't take long to make.
-Based on a small snippet I remember seeing from junegunn.
+Placeholder for an idea I had as a semi-official extension to vim-plug.
+Based on a small snippet I remember seeing from junegunn completing from vim-awesome.
 I don't think it quite fits inside vim-plug given the db, so better as a plugin itself.
-I'd maintain my own because I don't think vim-awesome is terribly active.
 
 Things it should do:
 
 - [ ] Provide some basic search via description/tags (i.e. PlugSearch).
-- [ ] Maintain a curated db of plugins with useful information. PRs welcome.
+- [x] Maintain a curated db of plugins with useful information. PRs welcome.
 - [ ] Provide completion for Plug lines from this db. Toggleable.
 - [x] Generate a tags.json db from main db for finding related plugins.
 - [ ] Provide some simple warnings of deprecations to users:
-  - [ ] Example, user using `sjl/ctrlp` (inactive) -> notify about `ctrlpvim/ctrlp` (active)
+  - [ ] Example, user using `kien/ctrlp.vim` (inactive) -> notify about `ctrlpvim/ctrlp.vim` (active)
   - [ ] Perhaps even detect when a plugin hasn't received a commit in x period and warn user? Might be annoying.
 
 ## Development
@@ -35,7 +33,7 @@ Handy programs:
 - [jsonlint](https://github.com/zaach/jsonlint):
   - Install: `sudo npm install jsonlint -g`
   - Lints json files, integrates with syntastic.
-- [jq](https://stedolan.github.io/jq/).
+- [jq](https://stedolan.github.io/jq/):
   - Install: `sudo apt-get install jq`
   - Compress database: `jq '.' -c db.json > db.json`
   - Deompress/pretty database: `jq '.' db.json > db.json`
