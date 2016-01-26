@@ -9,7 +9,7 @@ Expect (Print Hello):
   Bye.
 
 Execute (Open Window):
-  PSearch
+  PSearch "snip"
   AssertEqual getline(1), "Plug Search"
   AssertEqual getline(2), "-----------"
   quit!
