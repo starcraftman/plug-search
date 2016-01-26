@@ -53,9 +53,9 @@ nnoremap <silent> <Space>l :wincmd l<CR>
 EOF
 
 TEST_FILE="$ROOT/tests/test.vader"
-vim -u "$VIMRC" +PlugInstall +qa
+vim -u "$VIMRC" +PlugInstall +qa > /dev/null 2>&1
 if [ "$1" = '!' ]; then
-  vim -u "$VIMRC" -c "Vader! $TEST_FILE" > /dev/null 2>&1
+  vim -u "$VIMRC" -c "Vader! $TEST_FILE"
 else
   vim -u "$VIMRC" -c "Vader $TEST_FILE"
 fi
