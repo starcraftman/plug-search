@@ -4,7 +4,7 @@
 Module to re(generate) tags.json database.
 Do NOT edit the tags.json file.
 """
-from __future__ import absolute_import, print_function
+from __future__ import absolute_import
 
 import json
 import os

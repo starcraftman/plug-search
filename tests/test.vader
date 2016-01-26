@@ -1,0 +1,15 @@
+Given (Print Hello):
+  Bye.
+
+Execute (Print Hello):
+  call append(0, "Hello")
+
+Expect (Print Hello):
+  Hello
+  Bye.
+
+Execute (Open Window):
+  PSearch
+  AssertEqual getline(1), "Plug Search"
+  AssertEqual getline(2), "-----------"
+  quit!
