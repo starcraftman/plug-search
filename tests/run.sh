@@ -10,7 +10,8 @@ if [ -d "$STAGE" ]; then
 fi
 
 curl -fLo $VIMPLUG --create-dirs \
-    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim \
+    > /dev/null 2>&1
 
 cat > $VIMRC <<EOF
 set nocompatible
