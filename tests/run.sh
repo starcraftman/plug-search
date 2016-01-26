@@ -52,11 +52,12 @@ nnoremap <silent> <Space>h :wincmd h<CR>
 nnoremap <silent> <Space>l :wincmd l<CR>
 EOF
 
+TEST_FILE="$ROOT/tests/test.vader"
 vim -u "$VIMRC" +PlugInstall +qa
 if [ "$1" = '!' ]; then
-  vim -u "$VIMRC" -c "Vader! $ROOT/tests/*.vader" > /dev/null 2>&1
+  vim -u "$VIMRC" -c "Vader! $TEST_FILE" > /dev/null 2>&1
 else
-  vim -u "$VIMRC" -c "Vader $ROOT/tests/*.vader"
+  vim -u "$VIMRC" -c "Vader $TEST_FILE"
 fi
 
 #jsonlint -q db.json

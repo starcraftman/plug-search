@@ -14,4 +14,4 @@ install: |
     npm install jsonlint
     cd $DIR
   fi
-script: ./tests/run.sh
+script: ./tests/run.sh !
