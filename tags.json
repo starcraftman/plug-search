@@ -15,13 +15,13 @@
   ],
   "code-completion": [
     "Shougo/neocomplete.vim",
-    "artur-shaik/vim-javacomplete2",
-    "Valloric/YouCompleteMe"
+    "Valloric/YouCompleteMe",
+    "artur-shaik/vim-javacomplete2"
   ],
   "completion": [
     "Shougo/neocomplete.vim",
-    "artur-shaik/vim-javacomplete2",
-    "Valloric/YouCompleteMe"
+    "Valloric/YouCompleteMe",
+    "artur-shaik/vim-javacomplete2"
   ],
   "inactive": [
     "kien/ctrlp.vim"
@@ -58,14 +58,13 @@
     "rdnetto/YCM-Generator"
   ],
   "search": [
+    "kien/ctrlp.vim",
+    "ctrlpvim/ctrlp.vim",
     "justinmk/vim-sneak"
   ],
-  "searching": [
-    "kien/ctrlp.vim",
-    "ctrlpvim/ctrlp.vim"
-  ],
   "snippets": [
-    "SirVer/ultisnips"
+    "SirVer/ultisnips",
+    "honza/vim-snippets"
   ],
   "tags": [
     "kien/ctrlp.vim",

@@ -15,10 +15,16 @@
     "desc": "Fuzzy file, buffer, mru... finder.",
     "tags": [
       "indexing",
-      "searching",
+      "search",
       "tags",
       "mru",
       "buffers"
+    ]
+  },
+  "honza/vim-snippets": {
+    "desc": "Standard snippets for a variety of languages.",
+    "tags": [
+      "snippets"
     ]
   },
   "justinmk/vim-sneak": {
@@ -42,7 +48,7 @@
     "tags": [
       "inactive",
       "indexing",
-      "searching",
+      "search",
       "tags",
       "mru",
       "buffers"
