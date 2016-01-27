@@ -12,22 +12,57 @@ let g:psr_tags = eval(join(readfile(s:root . '/tags.json')))
 let s:psr_tab = get(s:, 'psr_tab', -1)
 let s:psr_buf = get(s:, 'psr_buf', -1)
 
-function! s:win_create()
+function! s:syntax()
+  syntax clear
+  syntax match psrTitle #^Plug Search#
+  syntax match psrUser  #^[a-zA-Z\-\.]\+/#he=e-1
+  syntax match psrRepo  #[a-zA-Z\-\.]\+:#he=e-1
+  hi def link psrTitle  Title
+  hi def link psrUser   Type
+  hi def link psrRepo   Repeat
+endfunction
+
+" Ensure I am on the Window
+function! s:switch_to()
+  if !s:win_exists()
+    return 0
+  endif
+
+  if winbufnr(0) != s:psr_buf
+    let s:pos = [tabpagenr(), winnr(), winsaveview()]
+    execute 'normal!' s:psr_tab.'gt'
+    let winnr = bufwinnr(s:psr_buf)
+    execute winnr.'wincmd w'
+    call add(s:pos, winsaveview())
+  else
+    let s:pos = [winsaveview()]
+  endif
+
+  setlocal modifiable
+  return 1
+endfunction
+
+" Main window = default search one
+function! s:create_main_win()
   execute 'vertical topleft new'
   let s:psr_tab = tabpagenr()
   let s:psr_buf = winbufnr(0)
+  nnoremap <silent> <buffer> q :bd!<cr>
 endfunction
 
 function! s:win_open()
-  call s:win_create()
+  if s:switch_to()
+    silent %d _
+  else
+    call s:create_main_win()
+  endif
 
-  nnoremap <silent> <buffer> q :bd!<cr>
-
-  call append(0, ["Plug Search", "-----------"])
+  setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile nowrap cursorline modifiable
   setf psearch
-endfunction
-
-function! s:win_close()
+  if exists('g:syntax_on')
+    call s:syntax()
+  endif
+  call append(0, ["Plug Search", "-----------"])
 endfunction
 
 function! s:win_exists()
@@ -62,5 +97,7 @@ endfunction
 
 command! -nargs=* PSearch call s:search(<f-args>)
 command! -nargs=* -complete=customlist,s:tag_names PTags call s:tags(<f-args>)
+" For testing
+command! PT call s:tags('search')
 
 " vim:set et sts=2 sw=2 ts=2:

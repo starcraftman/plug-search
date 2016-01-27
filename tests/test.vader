@@ -1,15 +1,22 @@
-Given (Print Hello):
-  Bye.
-
-Execute (Print Hello):
-  call append(0, "Hello")
-
-Expect (Print Hello):
-  Hello
-  Bye.
+Execute (Setup):
+  " TODO: Limit data, likely sourcing test dbs in
+  Log string(keys(g:psr_plugs))
+  Log string(keys(g:psr_tags))
 
 Execute (Open Window):
-  PSearch "snip"
+  PSearch zzz
   AssertEqual getline(1), "Plug Search"
   AssertEqual getline(2), "-----------"
+  quit!
+
+Execute (Search Tags):
+  PTags snippets
+  Assert stridx(getline(4), "honza/vim-snippets") != -1
+  Assert stridx(getline(5), "SirVer/ultisnips") != -1
+  quit!
+
+Execute (Search Term):
+  PSearch You
+  Assert stridx(getline(4), "rdnetto/YCM-Generator") != -1
+  Assert stridx(getline(5), "Valloric/YouCompleteMe") != -1
   quit!
