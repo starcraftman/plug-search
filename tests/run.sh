@@ -1,15 +1,13 @@
 #!/usr/bin/env bash
 ROOT=$(dirname $(dirname $(readlink -f $0)))
-STAGE=/tmp/staging
-VADER="$STAGE/vader.vim"
+STAGE=/tmp/vsearch-staging
 VIMRC="$STAGE/vimrc"
-VIMPLUG="$STAGE/autoload/plug.vim"
 
 if [ -d "$STAGE" ]; then
     rm -rf "$STAGE"
 fi
 
-curl -fLo $VIMPLUG --create-dirs \
+curl -fLo "$STAGE/autoload/plug.vim" --create-dirs \
     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim \
     > /dev/null 2>&1
 
