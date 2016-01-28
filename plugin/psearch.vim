@@ -12,16 +12,6 @@ let s:root = fnamemodify(resolve(expand('<sfile>:p')), ':h:h')
 let g:psr_plugs = eval(join(readfile(s:root . '/db.json')))
 let g:psr_tags = eval(join(readfile(s:root . '/tags.json')))
 
-function! s:mul_text(text, times)
-  let line = ''
-  let times = a:times
-  while times > 0
-    let line .= a:text
-    let times -= 1
-  endwhile
-  return line
-endfunction
-
 function! s:syntax_info(title)
   syn clear
   syn match psrTag #^\S #he=e-1
@@ -53,16 +43,42 @@ function! s:syntax_win()
   hi def link psrComment Comment
 endfunction
 
-function! s:append_to_buf(lines, loc)
-  let [cur_tab, cur_win] = [tabpagenr(), winnr()]
-  execute 'normal!' a:loc[0] . 'gt'
-  execute bufwinnr(a:loc[1]) . 'wincmd w'
+function! s:help_win()
+  let lines =  [
+      \ "? Toggle this help text.",
+      \ "i Insert Plug line into starting buffer.",
+      \ "I Same as 'i', then close windows.",
+      \ "q Close all open windows.",
+      \ ]
+  call s:help(lines)
+endfunction
 
-  call append(a:loc[2]['lnum'] + s:lines_put, a:lines)
-  let s:lines_put += type(a:lines) == type([]) ? len(a:lines) : 1
+function! s:help_info()
+  let lines =  [
+      \ "? Toggle this help text.",
+      \ "q Close this window.",
+      \ ]
+  call s:help(lines)
+endfunction
 
-  execute 'normal!' cur_tab . 'gt'
-  execute cur_win . 'wincmd w'
+function! s:help(lines)
+  let line = getline(1)
+  if line[0] != '?'
+    let buffer = s:mul_text('#', winwidth(0) * 0.5)
+    call append(0, a:lines + [buffer])
+  else
+    exec printf('1,%dd', len(a:lines) + 1)
+  endif
+endfunction
+
+function! s:mul_text(text, times)
+  let line = ''
+  let times = a:times
+  while times > 0
+    let line .= a:text
+    let times -= 1
+  endwhile
+  return line
 endfunction
 
 function! s:get_plug_name()
@@ -74,6 +90,18 @@ function! s:get_plug_name()
   return line[0:index]
 endfunction
 
+function! s:append_to_loc(lines, loc)
+  let [cur_tab, cur_win] = [tabpagenr(), winnr()]
+  execute 'normal!' a:loc[0] . 'gt'
+  execute bufwinnr(a:loc[1]) . 'wincmd w'
+
+  call append(a:loc[2]['lnum'] + s:lines_put, a:lines)
+  let s:lines_put += type(a:lines) == type([]) ? len(a:lines) : 1
+
+  execute 'normal!' cur_tab . 'gt'
+  execute cur_win . 'wincmd w'
+endfunction
+
 " Insert the Plug line at original buffer position
 function! s:insert(close)
   try
@@ -81,7 +109,7 @@ function! s:insert(close)
     let def_opts = get(g:psr_plugs[plug], 'opts', '')
     let line = printf("Plug '%s'%s", plug,
           \ type(def_opts) == type({}) ? ', ' . string(def_opts) : '')
-    call s:append_to_buf(line, s:orig_loc)
+    call s:append_to_loc(line, s:orig_loc)
   catch
     echoerr 'No plug on current line.'
   endtry
@@ -133,35 +161,7 @@ function! s:fill_info(plug, lnum)
   call append(lnum, lines)
 endfunction
 
-function! s:win_help()
-  let lines =  [
-      \ "? Toggle this help text.",
-      \ "i Insert Plug line into starting buffer.",
-      \ "I Same as 'i', then close windows.",
-      \ "q Close all open windows.",
-      \ ]
-  call s:help(lines)
-endfunction
-
-function! s:info_help()
-  let lines =  [
-      \ "? Toggle this help text.",
-      \ "q Close this window.",
-      \ ]
-  call s:help(lines)
-endfunction
-
-function! s:help(lines)
-  let line = getline(1)
-  if line[0] != '?'
-    let buffer = s:mul_text('#', winwidth(0) * 0.5)
-    call append(0, a:lines + [buffer])
-  else
-    exec printf('1,%dd', len(a:lines) + 1)
-  endif
-endfunction
-
-function! s:info()
+function! s:open_info()
   try
     let plug_name = s:get_plug_name()
     let plug = g:psr_plugs[plug_name]
@@ -210,7 +210,7 @@ function! s:create_info_win()
   new
   let s:loc.info_buf = winbufnr(0)
   nnoremap <silent> <buffer> q :bd!<cr>
-  nnoremap <silent> <buffer> ? :call <SID>info_help()<cr>
+  nnoremap <silent> <buffer> ? :call <SID>help_info()<cr>
   " TODO: Should be able to 'open' a plugin and replace info buffer.
   " TODO: Should be able to 'open' a tag and replace main window with plugins
   " matching.
@@ -226,13 +226,13 @@ function! s:create_main_win()
   nnoremap <silent> <buffer> q :call <SID>win_close()<cr>
   nnoremap <silent> <buffer> i :call <SID>insert(0)<cr>
   nnoremap <silent> <buffer> I :call <SID>insert(1)<cr>
-  nnoremap <silent> <buffer> o :call <SID>info()<cr>
+  nnoremap <silent> <buffer> o :call <SID>open_info()<cr>
   " TODO: Should be able to open to github URL, deps openBrowser?
   " nnoremap <silent> <buffer> O :call <SID>open_github()<cr>
-  nnoremap <silent> <buffer> ? :call <SID>win_help()<cr>
+  nnoremap <silent> <buffer> ? :call <SID>help_win()<cr>
 endfunction
 
-function! s:win_open()
+function! s:open_win()
   if empty(s:orig_loc)
     let s:orig_loc = [tabpagenr(), winnr(), winsaveview()]
   endif
@@ -271,7 +271,7 @@ function! s:win_exists(bufnr)
 endfunction
 
 function! s:search(...)
-  call s:win_open()
+  call s:open_win()
 
   let term = a:1
   for [name,plug] in items(g:psr_plugs)
@@ -284,7 +284,7 @@ function! s:search(...)
 endfunction
 
 function! s:tags(...)
-  call s:win_open()
+  call s:open_win()
 
   for name in get(g:psr_tags, a:1, [])
     call append(3, name . ': ' . g:psr_plugs[name]['desc'])
