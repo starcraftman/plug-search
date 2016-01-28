@@ -59,5 +59,5 @@ else
   vim -u "$VIMRC" -c "Vader $TEST_FILE"
 fi
 
-#jsonlint -q db.json
-#jsonlint -q tags.json
+jsonlint -q db.json
+jsonlint -q tags.json

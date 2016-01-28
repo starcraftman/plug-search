@@ -8,7 +8,7 @@
     ]
   },
   "ctrlpvim/ctrlp.vim": {
-    "alternatives": [
+    "alts": [
       "junegunn/fzf",
       "kien/ctrlp.vim"
     ],
@@ -28,7 +28,7 @@
     ]
   },
   "justinmk/vim-sneak": {
-    "alternatives": [
+    "alts": [
       "easymotion/vim-easymotion"
     ],
     "desc": "Slick movement based on searching for characters.",
@@ -40,7 +40,7 @@
   },
   "kien/ctrlp.vim": {
     "fork": "ctrlpvim/ctrlp.vim",
-    "alternatives": [
+    "alts": [
       "ctrlpvim/ctrlp.vim",
       "junegunn/fzf"
     ],

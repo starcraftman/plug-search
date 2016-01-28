@@ -12,28 +12,45 @@ let s:root = fnamemodify(resolve(expand('<sfile>:p')), ':h:h')
 let g:psr_plugs = eval(join(readfile(s:root . '/db.json')))
 let g:psr_tags = eval(join(readfile(s:root . '/tags.json')))
 
+function! s:mul_text(text, times)
+  let line = ''
+  let times = a:times
+  while times > 0
+    let line .= a:text
+    let times -= 1
+  endwhile
+  return line
+endfunction
+
 function! s:syntax_info(title)
   syn clear
+  syn match psrTag #^\S #he=e-1
+  syn match psrComment /[#\-]\+/
   syn match psrWarning #^PLUGIN UNMAINTAINED#
-  syn match psrSubtitle #^[A-Z][0-9a-zA-Z ]\+:#he=e-1
+  syn match psrTitle #^[A-Z][0-9a-zA-Z ]\+:#he=e-1
   syn match psrUser  #[0-9a-zA-Z\-.]\+/#me=e-1,he=e-1
   syn match psrRepo  #/[0-9a-zA-Z\-.]\+#ms=s+1
-  syn match psrTag   #  - .*#hs=s+4
+  syn match psrTag   #- .*#hs=s+2
   hi def link psrWarning Error
-  hi def link psrSubtitle  Title
+  hi def link psrTitle  Title
   hi def link psrUser   Type
   hi def link psrRepo   Repeat
   hi def link psrTag    Function
+  hi def link psrComment Comment
 endfunction
 
 function! s:syntax_win()
   syn clear
+  syn match psrTag #^\S #he=e-1
+  syn match psrComment /[#\-]\+/
   syn match psrTitle #^Plug Search#
   syn match psrUser  #^[0-9a-zA-Z\-.]\+/#he=e-1
   syn match psrRepo  #[0-9a-zA-Z\-.]\+:#he=e-1
   hi def link psrTitle  Title
   hi def link psrUser   Type
   hi def link psrRepo   Repeat
+  hi def link psrTag    Function
+  hi def link psrComment Comment
 endfunction
 
 function! s:append_to_buf(lines, loc)
@@ -51,17 +68,23 @@ endfunction
 function! s:get_plug_name()
   let line = getline('.')
   let index = stridx(line, ':') - 1
+  if index == -2
+    throw 'No plug found.'
+  endif
   return line[0:index]
 endfunction
 
 " Insert the Plug line at original buffer position
 function! s:insert(close)
-  let plug = s:get_plug_name()
-  let def_opts = get(g:psr_plugs[plug], 'opts', '')
-  let line = printf("Plug '%s'%s", plug,
-        \ type(def_opts) == type({}) ? ', ' . string(def_opts) : '')
-
-  call s:append_to_buf(line, s:orig_loc)
+  try
+    let plug = s:get_plug_name()
+    let def_opts = get(g:psr_plugs[plug], 'opts', '')
+    let line = printf("Plug '%s'%s", plug,
+          \ type(def_opts) == type({}) ? ', ' . string(def_opts) : '')
+    call s:append_to_buf(line, s:orig_loc)
+  catch
+    echoerr 'No plug on current line.'
+  endtry
 
   if a:close
     call s:win_close()
@@ -70,64 +93,99 @@ endfunction
 
 function! s:fill_info(plug, lnum)
   let lnum = a:lnum
+  let lines = []
 
   let fork = get(a:plug, 'fork', '')
   if fork != ''
-    call append(lnum, "PLUGIN UNMAINTAINED")
-    call append(lnum + 1, "Active Fork: " . fork)
-    let lnum += 2
+    let lines = add(lines, "PLUGIN UNMAINTAINED")
+    let lines = add(lines, "Active Fork: " . fork)
   endif
 
-  call append(lnum, "Description: " . a:plug.desc)
-  let lnum += 1
+  let lines = add(lines,  "Description: " . a:plug.desc)
 
-  call append(lnum, "Tags:")
-  let lnum += 1
+  let alts = get(a:plug, 'alts', [])
+  if len(alts)
+    let lines = add(lines, "Alternatives:")
+    for alt in alts
+      let lines = add(lines, "* " . alt)
+    endfor
+  endif
 
+  let opts = get(a:plug, 'opts', {})
+  if len(opts)
+    " FIXME: Formatting of info?
+    call add(lines, "Standard Opts:" . string(opts))
+  endif
+
+  let suggests = get(a:plug, 'suggests', [])
+  if len(suggests)
+    call add(lines, "Suggests:")
+    for suggest in suggests
+      call add(lines, "* " . suggest)
+    endfor
+  endif
+
+  call add(lines, "Tags:")
   for tag in a:plug.tags
-    call append(lnum, "  - " . tag)
-    let lnum += 1
+    call add(lines, "- " . tag)
   endfor
 
-  let alts = get(a:plug, 'alternatives', [])
-  if len(alts)
-    call append(lnum, "Alternatives:")
-    let lnum += 1
+  call append(lnum, lines)
+endfunction
 
-    for alt in alts
-      call append(lnum, "  * " . alt)
-      let lnum += 1
-    endfor
+function! s:win_help()
+  let lines =  [
+      \ "? Toggle this help text.",
+      \ "i Insert Plug line into starting buffer.",
+      \ "I Same as 'i', then close windows.",
+      \ "q Close all open windows.",
+      \ ]
+  call s:help(lines)
+endfunction
+
+function! s:info_help()
+  let lines =  [
+      \ "? Toggle this help text.",
+      \ "q Close this window.",
+      \ ]
+  call s:help(lines)
+endfunction
+
+function! s:help(lines)
+  let line = getline(1)
+  if line[0] != '?'
+    let buffer = s:mul_text('#', winwidth(0) * 0.5)
+    call append(0, a:lines + [buffer])
+  else
+    exec printf('1,%dd', len(a:lines) + 1)
   endif
 endfunction
 
 function! s:info()
-  let plug_name = s:get_plug_name()
-  let plug = g:psr_plugs[plug_name]
+  try
+    let plug_name = s:get_plug_name()
+    let plug = g:psr_plugs[plug_name]
 
-  if s:switch_to(s:loc.info_buf)
-    silent %d _
-  else
-    call s:create_info_win()
-  endif
+    if s:switch_to(s:loc.info_buf)
+      silent %d _
+    else
+      call s:create_info_win()
+    endif
 
-  setlocal buftype=nofile bufhidden=wipe nobuflisted
-        \ noswapfile nowrap cursorline modifiable
-  setf psearch
+    setlocal buftype=nofile bufhidden=wipe nobuflisted
+          \ noswapfile nowrap cursorline modifiable
+    setf psearch
 
-  if exists('g:syntax_on')
-    call s:syntax_info(plug_name)
-  endif
+    if exists('g:syntax_on')
+      call s:syntax_info(plug_name)
+    endif
 
-  let bar = ''
-  let len = len(plug_name)
-  while len > 0
-    let bar = bar . '-'
-    let len -= 1
-  endwhile
-
-  call append(0, [plug_name, bar])
-  call s:fill_info(plug, 3)
+    call append(0, [plug_name, s:mul_text('-', len(plug_name))])
+    call s:fill_info(plug, 3)
+    normal gg
+  catch
+    echoerr 'No plug on current line.'
+  endtry
 endfunction
 
 function! s:switch_to(bufnr)
@@ -152,6 +210,12 @@ function! s:create_info_win()
   new
   let s:loc.info_buf = winbufnr(0)
   nnoremap <silent> <buffer> q :bd!<cr>
+  nnoremap <silent> <buffer> ? :call <SID>info_help()<cr>
+  " TODO: Should be able to 'open' a plugin and replace info buffer.
+  " TODO: Should be able to 'open' a tag and replace main window with plugins
+  " matching.
+  " TODO: Should be able to open to github URL, deps openBrowser?
+  " nnoremap <silent> <buffer> O :call <SID>open_github()<cr>
 endfunction
 
 " Main window = default search one
@@ -162,10 +226,10 @@ function! s:create_main_win()
   nnoremap <silent> <buffer> q :call <SID>win_close()<cr>
   nnoremap <silent> <buffer> i :call <SID>insert(0)<cr>
   nnoremap <silent> <buffer> I :call <SID>insert(1)<cr>
-  nnoremap <silent> <buffer> n :call <SID>info()<cr>
-
-  " TODO: Help split
-  "nnoremap <buffer> ? :call <SID>help()<cr>
+  nnoremap <silent> <buffer> o :call <SID>info()<cr>
+  " TODO: Should be able to open to github URL, deps openBrowser?
+  " nnoremap <silent> <buffer> O :call <SID>open_github()<cr>
+  nnoremap <silent> <buffer> ? :call <SID>win_help()<cr>
 endfunction
 
 function! s:win_open()
