@@ -9,10 +9,9 @@ let s:root = fnamemodify(resolve(expand('<sfile>:p')), ':h:h')
 let g:psr_plugs = eval(join(readfile(s:root . '/db.json')))
 let g:psr_tags = eval(join(readfile(s:root . '/tags.json')))
 
-let s:psr_tab = get(s:, 'psr_tab', -1)
-let s:psr_buf = get(s:, 'psr_buf', -1)
+let s:loc = {'tab': -1, 'buf': -1, 'info_buf': -1}
 
-function! s:syntax()
+function! s:syntax_win()
   syntax clear
   syntax match psrTitle #^Plug Search#
   syntax match psrUser  #^[a-zA-Z\-\.]\+/#he=e-1
@@ -22,16 +21,33 @@ function! s:syntax()
   hi def link psrRepo   Repeat
 endfunction
 
-" Ensure I am on the Window
+" Insert the Plug line at original buffer position
+function! s:insert(close)
+  let plug = getline('.')
+  let index = stridx(plug, ':') - 1
+  let plug = plug[0:index]
+  let def_opts = get(g:psr_plugs[plug], 'opts', '')
+  let line = printf("Plug '%s'%s", plug,
+        \ type(def_opts) == type({}) ? ', ' . string(def_opts) : '')
+
+  echomsg plug . ' ' . line
+  " TODO: Insert text at previous position.
+
+  if a:close
+    call s:win_close()
+  endif
+endfunction
+
 function! s:switch_to()
   if !s:win_exists()
     return 0
   endif
 
-  if winbufnr(0) != s:psr_buf
+  " TODO: Extract function
+  if winbufnr(0) != s:loc.buf
     let s:pos = [tabpagenr(), winnr(), winsaveview()]
-    execute 'normal!' s:psr_tab.'gt'
-    let winnr = bufwinnr(s:psr_buf)
+    execute 'normal!' s:loc.tab.'gt'
+    let winnr = bufwinnr(s:loc.buf)
     execute winnr.'wincmd w'
     call add(s:pos, winsaveview())
   else
@@ -45,9 +61,18 @@ endfunction
 " Main window = default search one
 function! s:create_main_win()
   execute 'vertical topleft new'
-  let s:psr_tab = tabpagenr()
-  let s:psr_buf = winbufnr(0)
-  nnoremap <silent> <buffer> q :bd!<cr>
+  let s:loc.tab = tabpagenr()
+  let s:loc.buf = winbufnr(0)
+  nnoremap <silent> <buffer> q :call <SID>win_close()<cr>
+
+  " Incomplete functions
+  nnoremap <buffer> i :call <SID>insert(0)<cr>
+  nnoremap <buffer> I :call <SID>insert(1)<cr>
+
+  " TODO: Help split
+  "nnoremap <buffer> ? :call <SID>help()<cr>
+  " TODO: Information split below panel
+  "nnoremap <buffer> n :call <SID>info()<cr>
 endfunction
 
 function! s:win_open()
@@ -57,17 +82,23 @@ function! s:win_open()
     call s:create_main_win()
   endif
 
-  setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile nowrap cursorline modifiable
+  setlocal buftype=nofile bufhidden=wipe nobuflisted
+        \ noswapfile nowrap cursorline modifiable
   setf psearch
   if exists('g:syntax_on')
-    call s:syntax()
+    call s:syntax_win()
   endif
   call append(0, ["Plug Search", "-----------"])
 endfunction
 
+function! s:win_close()
+  let s:loc = {'tab': -1, 'buf': -1, 'info_buf': -1}
+  silent bdelete!
+endfunction
+
 function! s:win_exists()
-  let buflist = tabpagebuflist(s:psr_tab)
-  return !empty(buflist) && index(buflist, s:psr_buf) >= 0
+  let buflist = tabpagebuflist(s:loc.tab)
+  return !empty(buflist) && index(buflist, s:loc.buf) >= 0
 endfunction
 
 function! s:search(...)
