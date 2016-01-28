@@ -39,7 +39,7 @@
     ]
   },
   "kien/ctrlp.vim": {
-    "active-fork": "ctrlpvim/ctrlp.vim",
+    "fork": "ctrlpvim/ctrlp.vim",
     "alternatives": [
       "ctrlpvim/ctrlp.vim",
       "junegunn/fzf"
