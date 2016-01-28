@@ -14,13 +14,16 @@ let g:psr_tags = eval(join(readfile(s:root . '/tags.json')))
 
 function! s:syntax_info(title)
   syn clear
-  "FIXME: Regex is off
-  "syn match psrUser  #^[0-9a-zA-Z\-.]\+/#he=e-1
-  "syn match psrRepo  #[0-9a-zA-Z\-.]\+:#he=e-1
-  "syn match psrTag   ##
-  "hi def link psrUser   Type
-  "hi def link psrRepo   Repeat
-  "hi def link psrTag   Repeat
+  syn match psrWarning #^PLUGIN UNMAINTAINED#
+  syn match psrSubtitle #^[A-Z][0-9a-zA-Z ]\+:#he=e-1
+  syn match psrUser  #[0-9a-zA-Z\-.]\+/#me=e-1,he=e-1
+  syn match psrRepo  #/[0-9a-zA-Z\-.]\+#ms=s+1
+  syn match psrTag   #  - .*#hs=s+4
+  hi def link psrWarning Error
+  hi def link psrSubtitle  Title
+  hi def link psrUser   Type
+  hi def link psrRepo   Repeat
+  hi def link psrTag    Function
 endfunction
 
 function! s:syntax_win()
@@ -70,7 +73,7 @@ function! s:fill_info(plug, lnum)
 
   let fork = get(a:plug, 'fork', '')
   if fork != ''
-    call append(lnum, "WARNING: Plugin unmaintained")
+    call append(lnum, "PLUGIN UNMAINTAINED")
     call append(lnum + 1, "Active Fork: " . fork)
     let lnum += 2
   endif
@@ -78,7 +81,7 @@ function! s:fill_info(plug, lnum)
   call append(lnum, "Description: " . a:plug.desc)
   let lnum += 1
 
-  call append(lnum, "Tags")
+  call append(lnum, "Tags:")
   let lnum += 1
 
   for tag in a:plug.tags
@@ -92,7 +95,7 @@ function! s:fill_info(plug, lnum)
     let lnum += 1
 
     for alt in alts
-      call append(lnum, "  - " . alt)
+      call append(lnum, "  * " . alt)
       let lnum += 1
     endfor
   endif
@@ -157,9 +160,9 @@ function! s:create_main_win()
   let s:loc.tab = tabpagenr()
   let s:loc.buf = winbufnr(0)
   nnoremap <silent> <buffer> q :call <SID>win_close()<cr>
-  nnoremap <buffer> i :call <SID>insert(0)<cr>
-  nnoremap <buffer> I :call <SID>insert(1)<cr>
-  nnoremap <buffer> n :call <SID>info()<cr>
+  nnoremap <silent> <buffer> i :call <SID>insert(0)<cr>
+  nnoremap <silent> <buffer> I :call <SID>insert(1)<cr>
+  nnoremap <silent> <buffer> n :call <SID>info()<cr>
 
   " TODO: Help split
   "nnoremap <buffer> ? :call <SID>help()<cr>
