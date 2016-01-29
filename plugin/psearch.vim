@@ -45,18 +45,19 @@ endfunction
 
 function! s:help_win()
   let lines =  [
-      \ "? Toggle this help text.",
-      \ "i Insert Plug line into starting buffer.",
-      \ "I Same as 'i', then close windows.",
-      \ "q Close all open windows.",
+      \ "? Toggle this help text",
+      \ "i Insert Plug line into starting buffer",
+      \ "I Same as 'i', then close all windows",
+      \ "q Close all open windows",
       \ ]
   call s:help(lines)
 endfunction
 
 function! s:help_info()
   let lines =  [
-      \ "? Toggle this help text.",
-      \ "q Close this window.",
+      \ "? Toggle this help text",
+      \ "q Close this window",
+      \ "Q Close all open windows",
       \ ]
   call s:help(lines)
 endfunction
@@ -210,6 +211,7 @@ function! s:create_info_win()
   new
   let s:loc.info_buf = winbufnr(0)
   nnoremap <silent> <buffer> q :bd!<cr>
+  nnoremap <silent> <buffer> Q :call <SID>win_close()<cr>
   nnoremap <silent> <buffer> ? :call <SID>help_info()<cr>
   " TODO: Should be able to 'open' a plugin and replace info buffer.
   " TODO: Should be able to 'open' a tag and replace main window with plugins
@@ -253,7 +255,7 @@ function! s:open_win()
 endfunction
 
 function! s:win_close()
-  for key in ['buf', 'info_buf']
+  for key in ['info_buf', 'buf']
     if s:loc[key] != -1
       call s:switch_to(s:loc[key])
       let s:loc[key] = -1
