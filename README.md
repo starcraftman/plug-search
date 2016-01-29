@@ -8,12 +8,12 @@ I don't think it quite fits inside vim-plug given the db, so better as a plugin 
 
 Things it should do:
 
-- [ ] Provide some basic search via description/tags (i.e. PlugSearch).
+- [x] Provide some basic search via description/tags (i.e. PlugSearch).
 - [x] Maintain a curated db of plugins with useful information. PRs welcome.
 - [ ] Provide completion for Plug lines from this db. Toggleable.
 - [x] Generate a tags.json db from main db for finding related plugins.
 - [ ] Provide some simple warnings of deprecations to users:
-  - [ ] Example, user using `kien/ctrlp.vim` (inactive) -> notify about `ctrlpvim/ctrlp.vim` (active)
+  - [x] Example, user using `kien/ctrlp.vim` (inactive) -> notify about `ctrlpvim/ctrlp.vim` (active)
   - [ ] Perhaps even detect when a plugin hasn't received a commit in x period and warn user? Might be annoying.
 
 ## Development
