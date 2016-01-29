@@ -14,33 +14,35 @@ let g:psr_tags = eval(join(readfile(s:root . '/tags.json')))
 
 function! s:syntax_info(title)
   syn clear
-  syn match psrTag #^\S #he=e-1
   syn match psrComment /[#\-]\+/
+  syn match psrRepo    #/[0-9a-zA-Z\-.]\+#ms=s+1
+  syn match psrTag     #- .*#hs=s+2
+  syn match psrTag     #^[^ \-] #he=e-1
+  syn match psrTitle   #^[A-Z][0-9a-zA-Z ]\+:#he=e-1
+  syn match psrUser    #[0-9a-zA-Z\-.]\+/#me=e-1,he=e-1
   syn match psrWarning #^PLUGIN UNMAINTAINED#
-  syn match psrTitle #^[A-Z][0-9a-zA-Z ]\+:#he=e-1
-  syn match psrUser  #[0-9a-zA-Z\-.]\+/#me=e-1,he=e-1
-  syn match psrRepo  #/[0-9a-zA-Z\-.]\+#ms=s+1
-  syn match psrTag   #- .*#hs=s+2
-  hi def link psrWarning Error
-  hi def link psrTitle  Title
-  hi def link psrUser   Type
-  hi def link psrRepo   Repeat
-  hi def link psrTag    Function
   hi def link psrComment Comment
+  hi def link psrRepo    Repeat
+  hi def link psrTag     Function
+  hi def link psrTitle   Title
+  hi def link psrUser    Type
+  hi def link psrWarning Error
 endfunction
 
 function! s:syntax_win()
   syn clear
-  syn match psrTag #^\S #he=e-1
   syn match psrComment /[#\-]\+/
-  syn match psrTitle #^Plug Search#
-  syn match psrUser  #^[0-9a-zA-Z\-.]\+/#he=e-1
-  syn match psrRepo  #[0-9a-zA-Z\-.]\+:#he=e-1
-  hi def link psrTitle  Title
-  hi def link psrUser   Type
-  hi def link psrRepo   Repeat
-  hi def link psrTag    Function
+  syn match psrRepo    #[0-9a-zA-Z\-.]\+:#he=e-1
+  syn match psrTag     #- .*#hs=s+2
+  syn match psrTag     #^[^ \-] #he=e-1
+  syn match psrTitle   #^Plug Search#
+  syn match psrUser    #^[0-9a-zA-Z\-.]\+/#he=e-1
   hi def link psrComment Comment
+  hi def link psrRepo    Repeat
+  hi def link psrTag     Function
+  hi def link psrTitle   Title
+  hi def link psrUser    Type
+  hi def link psrWarning Error
 endfunction
 
 function! s:help_win()
@@ -82,13 +84,32 @@ function! s:mul_text(text, times)
   return line
 endfunction
 
-function! s:get_plug_name()
-  let line = getline('.')
-  let index = stridx(line, ':') - 1
-  if index == -2
-    throw 'No plug found.'
+function! s:get_tag_name()
+  let words = split(getline('.'))
+  if words[0] != '-'
+    throw 'No tag found in line: ' . getline('.')
   endif
-  return line[0:index]
+  return words[1]
+endfunction
+
+function! s:get_plug_name()
+  let plug_name = matchstr(getline('.'), '\S\+/[^ :]\+')
+  if plug_name == ''
+    throw 'No plugin found in line: ' . getline('.')
+  endif
+  return plug_name
+endfunction
+
+function! s:get_plug_entry(name, ...)
+  let plug = get(g:psr_plugs, a:name, {})
+  if empty(plug)
+    if a:0 > 0
+      return a:1
+    else
+      throw 'db.json missing plugin: ' . a:name
+    endif
+  endif
+  return plug
 endfunction
 
 function! s:append_to_loc(lines, loc)
@@ -107,12 +128,12 @@ endfunction
 function! s:insert(close)
   try
     let plug = s:get_plug_name()
-    let def_opts = get(g:psr_plugs[plug], 'opts', '')
+    let def_opts = get(s:get_plug_entry(plug), 'opts', {})
     let line = printf("Plug '%s'%s", plug,
-          \ type(def_opts) == type({}) ? ', ' . string(def_opts) : '')
+          \ empty(def_opts) ? '' : ', ' . string(def_opts))
     call s:append_to_loc(line, s:orig_loc)
   catch
-    echoerr 'No plug on current line.'
+    echoerr v:exception
   endtry
 
   if a:close
@@ -142,8 +163,8 @@ function! s:fill_info(plug, lnum)
 
   let opts = get(a:plug, 'opts', {})
   if len(opts)
-    " FIXME: Formatting of info?
-    call add(lines, "Standard Opts:" . string(opts))
+    " FIXME: Formatting of dict?
+    call add(lines, "Standard Opts: " . string(opts))
   endif
 
   let suggests = get(a:plug, 'suggests', [])
@@ -165,7 +186,7 @@ endfunction
 function! s:open_info()
   try
     let plug_name = s:get_plug_name()
-    let plug = g:psr_plugs[plug_name]
+    let plug = s:get_plug_entry(plug_name)
 
     if s:switch_to(s:loc.info_buf)
       silent %d _
@@ -185,7 +206,7 @@ function! s:open_info()
     call s:fill_info(plug, 3)
     normal gg
   catch
-    echoerr 'No plug on current line.'
+    echoerr v:exception
   endtry
 endfunction
 
@@ -207,15 +228,21 @@ function! s:switch_to(bufnr)
   return 1
 endfunction
 
+function! s:open_type()
+  try
+    call s:tags(s:get_tag_name())
+  catch
+    call s:open_info()
+  endtry
+endfunction
+
 function! s:create_info_win()
   new
   let s:loc.info_buf = winbufnr(0)
   nnoremap <silent> <buffer> q :bd!<cr>
   nnoremap <silent> <buffer> Q :call <SID>win_close()<cr>
   nnoremap <silent> <buffer> ? :call <SID>help_info()<cr>
-  " TODO: Should be able to 'open' a plugin and replace info buffer.
-  " TODO: Should be able to 'open' a tag and replace main window with plugins
-  " matching.
+  nnoremap <silent> <buffer> o :call <SID>open_type()<cr>
   " TODO: Should be able to open to github URL, deps openBrowser?
   " nnoremap <silent> <buffer> O :call <SID>open_github()<cr>
 endfunction
@@ -228,7 +255,7 @@ function! s:create_main_win()
   nnoremap <silent> <buffer> q :call <SID>win_close()<cr>
   nnoremap <silent> <buffer> i :call <SID>insert(0)<cr>
   nnoremap <silent> <buffer> I :call <SID>insert(1)<cr>
-  nnoremap <silent> <buffer> o :call <SID>open_info()<cr>
+  nnoremap <silent> <buffer> o :call <SID>open_type()<cr>
   " TODO: Should be able to open to github URL, deps openBrowser?
   " nnoremap <silent> <buffer> O :call <SID>open_github()<cr>
   nnoremap <silent> <buffer> ? :call <SID>help_win()<cr>
@@ -272,25 +299,49 @@ function! s:win_exists(bufnr)
   return !empty(buflist) && index(buflist, a:bufnr) >= 0
 endfunction
 
+function! s:match_str(haystack, needles)
+  for needle in a:needles
+    if stridx(a:haystack, needle) != -1
+      return 1
+    endif
+  endfor
+  return 0
+endfunction
+
 function! s:search(...)
   call s:open_win()
 
-  let term = a:1
-  for [name,plug] in items(g:psr_plugs)
+  for [name, plug] in items(g:psr_plugs)
     let line = name . ': ' . plug['desc']
-    if stridx(line, term) != -1
+    if s:match_str(line, a:000)
       call append(3, line)
     endif
-    unlet name plug
   endfor
+endfunction
+
+" Matches if any needles in the haystack, both lists
+function! s:merge_lists(first, second)
+  let new_list = copy(a:first)
+  for entity in a:second
+    if index(new_list, entity) == -1
+      call add(new_list, entity)
+    endif
+  endfor
+  return new_list
 endfunction
 
 function! s:tags(...)
   call s:open_win()
 
-  for name in get(g:psr_tags, a:1, [])
-    call append(3, name . ': ' . g:psr_plugs[name]['desc'])
-  endfor
+  if a:0 == 0
+    call append(3, map(sort(keys(g:psr_tags)), '"- " . v:val'))
+  else
+    let tags = []
+    for term in a:000
+      let tags = s:merge_lists(tags, get(g:psr_tags, term, []))
+    endfor
+    call append(3, map(tags, 'v:val . ": " . s:get_plug_entry(v:val).desc'))
+  endif
 endfunction
 
 function! s:tag_names(...)

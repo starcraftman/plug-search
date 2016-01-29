@@ -40,10 +40,12 @@
     "rdnetto/YCM-Generator"
   ],
   "motion": [
-    "justinmk/vim-sneak"
+    "justinmk/vim-sneak",
+    "easymotion/vim-easymotion"
   ],
   "movement": [
-    "justinmk/vim-sneak"
+    "justinmk/vim-sneak",
+    "easymotion/vim-easymotion"
   ],
   "mru": [
     "kien/ctrlp.vim",
@@ -60,7 +62,8 @@
   "search": [
     "kien/ctrlp.vim",
     "ctrlpvim/ctrlp.vim",
-    "justinmk/vim-sneak"
+    "justinmk/vim-sneak",
+    "easymotion/vim-easymotion"
   ],
   "snippets": [
     "SirVer/ultisnips",

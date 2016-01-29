@@ -21,6 +21,17 @@
       "buffers"
     ]
   },
+  "easymotion/vim-easymotion": {
+    "desc": "Easy motions for vim movement.",
+    "alts": [
+      "justinmk/vim-sneak"
+    ],
+    "tags": [
+      "motion",
+      "movement",
+      "search"
+    ]
+  },
   "honza/vim-snippets": {
     "desc": "Standard snippets for a variety of languages.",
     "tags": [
