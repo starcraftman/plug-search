@@ -84,7 +84,7 @@ function! s:mul_text(text, times)
   return line
 endfunction
 
-function! s:get_tag_name()
+function! s:parse_tag_name()
   let words = split(getline('.'))
   if words[0] != '-'
     throw 'No tag found in line: ' . getline('.')
@@ -92,7 +92,7 @@ function! s:get_tag_name()
   return words[1]
 endfunction
 
-function! s:get_plug_name()
+function! s:parse_plug_name()
   let plug_name = matchstr(getline('.'), '\S\+/[^ :]\+')
   if plug_name == ''
     throw 'No plugin found in line: ' . getline('.')
@@ -127,7 +127,7 @@ endfunction
 " Insert the Plug line at original buffer position
 function! s:insert(close)
   try
-    let plug = s:get_plug_name()
+    let plug = s:parse_plug_name()
     let def_opts = get(s:get_plug_entry(plug), 'opts', {})
     let line = printf("Plug '%s'%s", plug,
           \ empty(def_opts) ? '' : ', ' . string(def_opts))
@@ -185,7 +185,7 @@ endfunction
 
 function! s:open_info()
   try
-    let plug_name = s:get_plug_name()
+    let plug_name = s:parse_plug_name()
     let plug = s:get_plug_entry(plug_name)
 
     if s:switch_to(s:loc.info_buf)
@@ -205,6 +205,7 @@ function! s:open_info()
     call append(0, [plug_name, s:mul_text('-', len(plug_name))])
     call s:fill_info(plug, 3)
     normal gg
+    setl nomodifiable
   catch
     echoerr v:exception
   endtry
@@ -230,7 +231,7 @@ endfunction
 
 function! s:open_type()
   try
-    call s:tags(s:get_tag_name())
+    call s:tags(s:parse_tag_name())
   catch
     call s:open_info()
   endtry
@@ -281,6 +282,7 @@ function! s:open_win()
   call append(0, ["Plug Search", "-----------"])
 endfunction
 
+" FIXME: Still bugged, sometimes closes orig buffer.
 function! s:win_close()
   for key in ['info_buf', 'buf']
     if s:loc[key] != -1
@@ -317,6 +319,7 @@ function! s:search(...)
       call append(3, line)
     endif
   endfor
+  setl nomodifiable
 endfunction
 
 " Matches if any needles in the haystack, both lists
@@ -342,13 +345,14 @@ function! s:tags(...)
     endfor
     call append(3, map(tags, 'v:val . ": " . s:get_plug_entry(v:val).desc'))
   endif
+  setl nomodifiable
 endfunction
 
 function! s:tag_names(...)
   return sort(filter(keys(g:psr_tags), 'stridx(v:val, a:1) == 0'))
 endfunction
 
-command! -nargs=* PSearch call s:search(<f-args>)
+command! -nargs=+ PSearch call s:search(<f-args>)
 command! -nargs=* -complete=customlist,s:tag_names PTags call s:tags(<f-args>)
 " For testing
 command! PT call s:tags('search')
