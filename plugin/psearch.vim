@@ -137,38 +137,28 @@ function! s:fill_info(plug, lnum)
 
   let fork = get(a:plug, 'fork', '')
   if fork != ''
-    let lines = add(lines, "PLUGIN UNMAINTAINED")
-    let lines = add(lines, "Active Fork: " . fork)
+    let lines += ["PLUGIN UNMAINTAINED", "Active Fork: " . fork]
   endif
 
-  let lines = add(lines,  "Description: " . a:plug.desc)
+  let lines += ["Description: " . a:plug.desc]
 
   let alts = get(a:plug, 'alts', [])
   if len(alts)
-    let lines = add(lines, "Alternatives:")
-    for alt in alts
-      let lines = add(lines, "* " . alt)
-    endfor
+    let lines += ["Alternatives:"] + map(alts, '"* " . v:val')
   endif
 
   let opts = get(a:plug, 'opts', {})
   if len(opts)
     " FIXME: Formatting of dict?
-    call add(lines, "Standard Opts: " . string(opts))
+    let lines += ["Standard Opts: " . string(opts)]
   endif
 
   let suggests = get(a:plug, 'suggests', [])
   if len(suggests)
-    call add(lines, "Suggests:")
-    for suggest in suggests
-      call add(lines, "* " . suggest)
-    endfor
+    let lines += ["Suggests:"] + map(suggests, '"* " . v:val')
   endif
 
-  call add(lines, "Tags:")
-  for tag in a:plug.tags
-    call add(lines, "- " . tag)
-  endfor
+  let lines += ["Tags:"] + map(a:plug.tags, '"- " . v:val')
 
   call append(lnum, lines)
 endfunction
@@ -201,7 +191,6 @@ function! s:open_info()
 
     call append(0, [plug_name, s:mul_text('-', len(plug_name))])
     call s:fill_info(plug, 3)
-    normal gg
     setl nomodifiable
   catch
     echoerr v:exception
@@ -282,6 +271,7 @@ function! s:win_close(...)
       silent bdelete!
     endif
   endfor
+
   if s:loc.win == -1 && s:loc.info == -1
     let s:loc.tab = -1
     let s:orig_loc = []
@@ -315,7 +305,6 @@ function! s:search(...)
   setl nomodifiable
 endfunction
 
-" Matches if any needles in the haystack, both lists
 function! s:merge_lists(first, second)
   let new_list = copy(a:first)
   for entity in a:second
