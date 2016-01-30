@@ -7,74 +7,10 @@ let g:psr_loaded = 1
 
 let s:orig_loc = []
 let s:lines_put = 0
-let s:loc = {'tab': -1, 'buf': -1, 'info_buf': -1}
+let s:loc = {'tab': -1, 'win': -1, 'info': -1}
 let s:root = fnamemodify(resolve(expand('<sfile>:p')), ':h:h')
 let g:psr_plugs = eval(join(readfile(s:root . '/db.json')))
 let g:psr_tags = eval(join(readfile(s:root . '/tags.json')))
-
-function! s:syntax_info(title)
-  syn clear
-  syn match psrComment /[#\-]\+/
-  syn match psrRepo    #/[0-9a-zA-Z\-.]\+#ms=s+1
-  syn match psrTag     #- .*#hs=s+2
-  syn match psrTag     #^[^ \-] #he=e-1
-  syn match psrTitle   #^[A-Z][0-9a-zA-Z ]\+:#he=e-1
-  syn match psrUser    #[0-9a-zA-Z\-.]\+/#me=e-1,he=e-1
-  syn match psrWarning #^PLUGIN UNMAINTAINED#
-  hi def link psrComment Comment
-  hi def link psrRepo    Repeat
-  hi def link psrTag     Function
-  hi def link psrTitle   Title
-  hi def link psrUser    Type
-  hi def link psrWarning Error
-endfunction
-
-function! s:syntax_win()
-  syn clear
-  syn match psrComment /[#\-]\+/
-  syn match psrRepo    #[0-9a-zA-Z\-.]\+:#he=e-1
-  syn match psrTag     #- .*#hs=s+2
-  syn match psrTag     #^[^ \-] #he=e-1
-  syn match psrTitle   #^Plug Search#
-  syn match psrUser    #^[0-9a-zA-Z\-.]\+/#he=e-1
-  hi def link psrComment Comment
-  hi def link psrRepo    Repeat
-  hi def link psrTag     Function
-  hi def link psrTitle   Title
-  hi def link psrUser    Type
-  hi def link psrWarning Error
-endfunction
-
-function! s:help_win()
-  let lines =  [
-      \ "? Toggle this help text",
-      \ "i Insert Plug line into starting buffer",
-      \ "I Same as 'i', then close all windows",
-      \ "q Close all open windows",
-      \ 'O Open plugin github project',
-      \ ]
-  call s:help(lines)
-endfunction
-
-function! s:help_info()
-  let lines =  [
-      \ "? Toggle this help text",
-      \ "q Close this window",
-      \ "Q Close all open windows",
-      \ 'O Open plugin github project',
-      \ ]
-  call s:help(lines)
-endfunction
-
-function! s:help(lines)
-  let line = getline(1)
-  if line[0] != '?'
-    let buffer = s:mul_text('#', winwidth(0) * 0.5)
-    call append(0, a:lines + [buffer])
-  else
-    exec printf('1,%dd', len(a:lines) + 1)
-  endif
-endfunction
 
 function! s:mul_text(text, times)
   let line = ''
@@ -114,6 +50,57 @@ function! s:get_plug_entry(name, ...)
   return plug
 endfunction
 
+function! s:syntax(type)
+  syn clear
+  syn match psrComment /[#\-]\+/
+  syn match psrTag     #- .*#hs=s+2
+  syn match psrTag     #^[^ \-] #he=e-1
+  syn match psrWarning #^PLUGIN UNMAINTAINED#
+  if a:type == 'info'
+    syn match psrRepo    #/[0-9a-zA-Z\-.]\+#ms=s+1
+    syn match psrTitle   #^[A-Z][0-9a-zA-Z ]\+:#he=e-1
+    syn match psrUser    #[0-9a-zA-Z\-.]\+/#me=e-1,he=e-1
+  else
+    syn match psrUser    #^[0-9a-zA-Z\-.]\+/#he=e-1
+    syn match psrRepo    #[0-9a-zA-Z\-.]\+:#he=e-1
+    syn match psrTitle   #^Plug Search#
+  endif
+  hi def link psrComment Comment
+  hi def link psrRepo    Repeat
+  hi def link psrTag     Function
+  hi def link psrTitle   Title
+  hi def link psrUser    Type
+  hi def link psrWarning Error
+endfunction
+
+function! s:help(type)
+  if a:type == 'info'
+    let lines =  [
+        \ "? Toggle this help text",
+        \ "q Close this window",
+        \ "Q Close all open windows",
+        \ 'O Open plugin github project',
+        \ ]
+  else
+    let lines =  [
+        \ "? Toggle this help text",
+        \ "i Insert Plug line into starting buffer",
+        \ "I Same as 'i', then close all windows",
+        \ "q Close all open windows",
+        \ 'O Open plugin github project',
+        \ ]
+  endif
+
+  setl modifiable
+  if getline(1)[0] != '?'
+    let buffer = s:mul_text('#', winwidth(0) * 0.5)
+    call append(0, lines + [buffer])
+  else
+    exec printf('1,%dd', len(lines) + 1)
+  endif
+  setl nomodifiable
+endfunction
+
 function! s:append_to_loc(lines, loc)
   let [cur_tab, cur_win] = [tabpagenr(), winnr()]
   execute 'normal!' a:loc[0] . 'gt'
@@ -126,8 +113,7 @@ function! s:append_to_loc(lines, loc)
   execute cur_win . 'wincmd w'
 endfunction
 
-" Insert the Plug line at original buffer position
-function! s:insert(close)
+function! s:insert_and_close(close)
   try
     let plug = s:parse_plug_name()
     let def_opts = get(s:get_plug_entry(plug), 'opts', {})
@@ -139,7 +125,7 @@ function! s:insert(close)
   endtry
 
   if a:close
-    call s:win_close()
+    call s:win_close('info', 'buf')
   endif
 endfunction
 
@@ -190,10 +176,16 @@ function! s:open_info()
     let plug_name = s:parse_plug_name()
     let plug = s:get_plug_entry(plug_name)
 
-    if s:switch_to(s:loc.info_buf)
+    if s:switch_to(s:loc.info)
       silent %d _
     else
-      call s:create_info_win()
+      new
+      let s:loc.info = winbufnr(0)
+      nnoremap <silent> <buffer> ? :call <SID>help('info')<cr>
+      nnoremap <silent> <buffer> q :call <SID>win_close('info')<cr>
+      nnoremap <silent> <buffer> Q :call <SID>win_close('info', 'win')<cr>
+      nnoremap <silent> <buffer> o :call <SID>open_type()<cr>
+      nnoremap <silent> <buffer> O :call <SID>open_github()<cr>
     endif
 
     setlocal buftype=nofile bufhidden=wipe nobuflisted
@@ -201,7 +193,7 @@ function! s:open_info()
     setf psearch
 
     if exists('g:syntax_on')
-      call s:syntax_info(plug_name)
+      call s:syntax('info')
     endif
 
     call append(0, [plug_name, s:mul_text('-', len(plug_name))])
@@ -239,16 +231,6 @@ function! s:open_type()
   endtry
 endfunction
 
-function! s:create_info_win()
-  new
-  let s:loc.info_buf = winbufnr(0)
-  nnoremap <silent> <buffer> ? :call <SID>help_info()<cr>
-  nnoremap <silent> <buffer> q :call <SID>win_close('info_buf')<cr>
-  nnoremap <silent> <buffer> Q :call <SID>win_close('info_buf', 'buf')<cr>
-  nnoremap <silent> <buffer> o :call <SID>open_type()<cr>
-  nnoremap <silent> <buffer> O :call <SID>open_github()<cr>
-endfunction
-
 function! s:open_github()
   if !exists(':OpenBrowser')
     echoerr 'Requires Plugin: tyru/open-browser.vim'
@@ -262,35 +244,30 @@ function! s:open_github()
   endtry
 endfunction
 
-" Main window = default search one
-function! s:create_main_win()
-  execute 'vertical topleft new'
-  let s:loc.tab = tabpagenr()
-  let s:loc.buf = winbufnr(0)
-  nnoremap <silent> <buffer> ? :call <SID>help_win()<cr>
-  nnoremap <silent> <buffer> q :call <SID>win_close('info_buf', 'buf')<cr>
-  nnoremap <silent> <buffer> i :call <SID>insert(0)<cr>
-  nnoremap <silent> <buffer> I :call <SID>insert(1)<cr>
-  nnoremap <silent> <buffer> o :call <SID>open_type()<cr>
-  nnoremap <silent> <buffer> O :call <SID>open_github()<cr>
-endfunction
-
 function! s:open_win()
   if empty(s:orig_loc)
     let s:orig_loc = [tabpagenr(), winnr(), winsaveview()]
   endif
 
-  if s:switch_to(s:loc.buf)
+  if s:switch_to(s:loc.win)
     silent %d _
   else
-    call s:create_main_win()
+    execute 'vertical topleft new'
+    let s:loc.tab = tabpagenr()
+    let s:loc.win = winbufnr(0)
+    nnoremap <silent> <buffer> ? :call <SID>help('win')<cr>
+    nnoremap <silent> <buffer> q :call <SID>win_close('info', 'win')<cr>
+    nnoremap <silent> <buffer> i :call <SID>insert_and_close(0)<cr>
+    nnoremap <silent> <buffer> I :call <SID>insert_and_close(1)<cr>
+    nnoremap <silent> <buffer> o :call <SID>open_type()<cr>
+    nnoremap <silent> <buffer> O :call <SID>open_github()<cr>
   endif
 
   setlocal buftype=nofile bufhidden=wipe nobuflisted
         \ noswapfile nowrap cursorline modifiable
   setf psearch
   if exists('g:syntax_on')
-    call s:syntax_win()
+    call s:syntax('win')
   endif
   call append(0, ["Plug Search", "-----------"])
 endfunction
@@ -303,7 +280,7 @@ function! s:win_close(...)
       silent bdelete!
     endif
   endfor
-  if s:loc.buf == -1 && s:loc.info_buf == -1
+  if s:loc.win == -1 && s:loc.info == -1
     let s:loc.tab = -1
     let s:orig_loc = []
     let s:lines_put = 0
