@@ -79,14 +79,18 @@ function! s:help(type)
         \ "? Toggle this help text",
         \ "q Close this window",
         \ "Q Close all open windows",
+        \ "i Insert Plug line into starting buffer",
+        \ "I Same as 'i', then close all windows",
+        \ "o Open plugin or tag under cursor",
         \ 'O Open plugin github project',
         \ ]
   else
     let lines =  [
         \ "? Toggle this help text",
+        \ "q Close all open windows",
         \ "i Insert Plug line into starting buffer",
         \ "I Same as 'i', then close all windows",
-        \ "q Close all open windows",
+        \ "o Open plugin or tag under cursor",
         \ 'O Open plugin github project',
         \ ]
   endif
@@ -186,8 +190,7 @@ function! s:open_info()
       nnoremap <silent> <buffer> O :call <SID>open_github()<cr>
     endif
 
-    setl buftype=nofile bufhidden=wipe nobuflisted
-          \ noswapfile nowrap cursorline modifiable
+    setl buftype=nofile bufhidden=wipe nobuflisted noswapfile nowrap cursorline modifiable
     setf psearch
 
     if exists('g:syntax_on')
@@ -261,8 +264,7 @@ function! s:open_win()
     nnoremap <silent> <buffer> O :call <SID>open_github()<cr>
   endif
 
-  setl buftype=nofile bufhidden=wipe nobuflisted
-        \ noswapfile nowrap cursorline modifiable
+  setl buftype=nofile bufhidden=wipe nobuflisted noswapfile nowrap cursorline modifiable
   setf psearch
   if exists('g:syntax_on')
     call s:syntax('win')
