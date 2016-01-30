@@ -1,5 +1,7 @@
 " plug-search - Find your plugins!
 " ================================
+" TODO: Format inserted lines with = . As go? Only on close?
+" TODO: Code completion
 if exists('g:psr_loaded')
   finish
 endif
