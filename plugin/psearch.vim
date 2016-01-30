@@ -2,6 +2,7 @@
 " ================================
 " TODO: Format inserted lines with = . As go? Only on close?
 " TODO: Code completion
+" TODO: Perhaps provide j/k option for PTags window.
 if exists('g:psr_loaded')
   finish
 endif
@@ -52,21 +53,16 @@ function! s:get_plug_entry(name, ...)
   return plug
 endfunction
 
-function! s:syntax(type)
+function! s:syntax()
   syn clear
   syn match psrComment /[#\-]\+/
   syn match psrTag     #- .*#hs=s+2
   syn match psrTag     #^[^ \-] #he=e-1
+  syn match psrUser    #[0-9a-zA-Z\-.]\+/#me=e-1,he=e-1
+  syn match psrRepo    #/[0-9a-zA-Z\-.]\+#ms=s+1
   syn match psrWarning #^PLUGIN UNMAINTAINED#
-  if a:type == 'info'
-    syn match psrRepo    #/[0-9a-zA-Z\-.]\+#ms=s+1
-    syn match psrTitle   #^[A-Z][0-9a-zA-Z ]\+:#he=e-1
-    syn match psrUser    #[0-9a-zA-Z\-.]\+/#me=e-1,he=e-1
-  else
-    syn match psrUser    #^[0-9a-zA-Z\-.]\+/#he=e-1
-    syn match psrRepo    #[0-9a-zA-Z\-.]\+:#he=e-1
-    syn match psrTitle   #^Plug Search#
-  endif
+  syn match psrTitle   #^[A-Z][0-9a-zA-Z ]\+:#he=e-1
+  syn match psrTitle   #^Plug Search#
   hi def link psrComment Comment
   hi def link psrRepo    Repeat
   hi def link psrTag     Function
@@ -131,8 +127,8 @@ function! s:insert()
   endtry
 endfunction
 
-function! s:fill_info(plug, lnum)
-  let lnum = a:lnum
+function! s:fill_info(plug_name, plug)
+  let header = [a:plug_name, s:mul_text('-', len(a:plug_name)), a:plug.desc]
   let lines = []
 
   let fork = get(a:plug, 'fork', '')
@@ -140,9 +136,7 @@ function! s:fill_info(plug, lnum)
     let lines += ["PLUGIN UNMAINTAINED", "Active Fork: " . fork]
   endif
 
-  let lines += ["Description: " . a:plug.desc]
-
-  let alts = get(a:plug, 'alts', [])
+  let alts = deepcopy(get(a:plug, 'alts', []))
   if len(alts)
     let lines += ["Alternatives:"] + map(alts, '"* " . v:val')
   endif
@@ -153,14 +147,15 @@ function! s:fill_info(plug, lnum)
     let lines += ["Standard Opts: " . string(opts)]
   endif
 
-  let suggests = get(a:plug, 'suggests', [])
+  let suggests = deepcopy(get(a:plug, 'suggests', []))
   if len(suggests)
     let lines += ["Suggests:"] + map(suggests, '"* " . v:val')
   endif
 
-  let lines += ["Tags:"] + map(a:plug.tags, '"- " . v:val')
+  let lines += ["Tags:"] + map(deepcopy(a:plug.tags), '"- " . v:val')
 
-  call append(lnum, lines)
+  call append(0, header)
+  call append(len(header) + 1, lines)
 endfunction
 
 function! s:open_info()
@@ -186,11 +181,10 @@ function! s:open_info()
     setf psearch
 
     if exists('g:syntax_on')
-      call s:syntax('info')
+      call s:syntax()
     endif
 
-    call append(0, [plug_name, s:mul_text('-', len(plug_name))])
-    call s:fill_info(plug, 3)
+    call s:fill_info(plug_name, plug)
     setl nomodifiable
   catch
     echoerr v:exception
@@ -236,6 +230,15 @@ function! s:open_github()
   endtry
 endfunction
 
+function! s:move_and_describe(dir)
+  exec 'normal! ' .  a:dir
+  try
+    call s:open_info()
+    call s:switch_to(s:loc.win)
+  catch
+  endtry
+endfunction
+
 function! s:open_win()
   if empty(s:orig_loc)
     let s:orig_loc = [tabpagenr(), winnr(), winsaveview()]
@@ -253,12 +256,16 @@ function! s:open_win()
     nnoremap <silent> <buffer> I :call <SID>insert()<cr> <bar> :call <SID>win_close('info', 'win')<cr>
     nnoremap <silent> <buffer> o :call <SID>open_type()<cr>
     nnoremap <silent> <buffer> O :call <SID>open_github()<cr>
+    if get(g:, 'psr_auto_open', 0)
+      nnoremap <silent> <buffer> j :call <SID>move_and_describe('j')<cr>
+      nnoremap <silent> <buffer> k :call <SID>move_and_describe('k')<cr>
+    endif
   endif
 
   setl buftype=nofile bufhidden=wipe nobuflisted noswapfile nowrap cursorline modifiable
   setf psearch
   if exists('g:syntax_on')
-    call s:syntax('win')
+    call s:syntax()
   endif
   call append(0, ["Plug Search", "-----------"])
 endfunction
@@ -299,7 +306,7 @@ function! s:search(...)
   for [name, plug] in items(g:psr_plugs)
     let line = name . ': ' . plug['desc']
     if s:match_str(line, a:000)
-      call append(3, line)
+      call append(3, name)
     endif
   endfor
   setl nomodifiable
@@ -325,7 +332,7 @@ function! s:tags(...)
     for term in a:000
       let tags = s:merge_lists(tags, get(g:psr_tags, term, []))
     endfor
-    call append(3, map(tags, 'v:val . ": " . s:get_plug_entry(v:val).desc'))
+    call append(3, tags)
   endif
   setl nomodifiable
 endfunction
@@ -336,7 +343,6 @@ endfunction
 
 command! -nargs=+ PSearch call s:search(<f-args>)
 command! -nargs=* -complete=customlist,s:tag_names PTags call s:tags(<f-args>)
-" For testing
 command! PT call s:tags('search')
 
 " vim:set et sts=2 sw=2 ts=2:
