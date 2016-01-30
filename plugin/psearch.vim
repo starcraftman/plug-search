@@ -113,7 +113,7 @@ function! s:append_to_loc(lines, loc)
   execute cur_win . 'wincmd w'
 endfunction
 
-function! s:insert_and_close(close)
+function! s:insert()
   try
     let plug = s:parse_plug_name()
     let def_opts = get(s:get_plug_entry(plug), 'opts', {})
@@ -123,10 +123,6 @@ function! s:insert_and_close(close)
   catch
     echoerr v:exception
   endtry
-
-  if a:close
-    call s:win_close('info', 'buf')
-  endif
 endfunction
 
 function! s:fill_info(plug, lnum)
@@ -184,11 +180,13 @@ function! s:open_info()
       nnoremap <silent> <buffer> ? :call <SID>help('info')<cr>
       nnoremap <silent> <buffer> q :call <SID>win_close('info')<cr>
       nnoremap <silent> <buffer> Q :call <SID>win_close('info', 'win')<cr>
+      nnoremap <silent> <buffer> i :call <SID>insert()<cr>
+      nnoremap <silent> <buffer> I :call <SID>insert()<cr> <bar> :call <SID>win_close('info', 'win')<cr>
       nnoremap <silent> <buffer> o :call <SID>open_type()<cr>
       nnoremap <silent> <buffer> O :call <SID>open_github()<cr>
     endif
 
-    setlocal buftype=nofile bufhidden=wipe nobuflisted
+    setl buftype=nofile bufhidden=wipe nobuflisted
           \ noswapfile nowrap cursorline modifiable
     setf psearch
 
@@ -219,7 +217,7 @@ function! s:switch_to(bufnr)
     let s:pos = [winsaveview()]
   endif
 
-  setlocal modifiable
+  setl modifiable
   return 1
 endfunction
 
@@ -257,13 +255,13 @@ function! s:open_win()
     let s:loc.win = winbufnr(0)
     nnoremap <silent> <buffer> ? :call <SID>help('win')<cr>
     nnoremap <silent> <buffer> q :call <SID>win_close('info', 'win')<cr>
-    nnoremap <silent> <buffer> i :call <SID>insert_and_close(0)<cr>
-    nnoremap <silent> <buffer> I :call <SID>insert_and_close(1)<cr>
+    nnoremap <silent> <buffer> i :call <SID>insert()<cr>
+    nnoremap <silent> <buffer> I :call <SID>insert()<cr> <bar> :call <SID>win_close('info', 'win')<cr>
     nnoremap <silent> <buffer> o :call <SID>open_type()<cr>
     nnoremap <silent> <buffer> O :call <SID>open_github()<cr>
   endif
 
-  setlocal buftype=nofile bufhidden=wipe nobuflisted
+  setl buftype=nofile bufhidden=wipe nobuflisted
         \ noswapfile nowrap cursorline modifiable
   setf psearch
   if exists('g:syntax_on')
