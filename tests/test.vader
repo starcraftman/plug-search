@@ -10,9 +10,8 @@ Execute (Open Window):
   quit!
 
 Execute (Search Tags):
-  PTags snippets
-  Assert stridx(getline(4), "honza/vim-snippets") != -1
-  Assert stridx(getline(5), "SirVer/ultisnips") != -1
+  PTags cmake
+  Assert stridx(getline(4), "rdnetto/YCM-Generator") != -1
   quit!
 
 Execute (Search Term):

@@ -51,6 +51,7 @@ function! s:help_win()
       \ "i Insert Plug line into starting buffer",
       \ "I Same as 'i', then close all windows",
       \ "q Close all open windows",
+      \ 'O Open plugin github project',
       \ ]
   call s:help(lines)
 endfunction
@@ -60,6 +61,7 @@ function! s:help_info()
       \ "? Toggle this help text",
       \ "q Close this window",
       \ "Q Close all open windows",
+      \ 'O Open plugin github project',
       \ ]
   call s:help(lines)
 endfunction
@@ -240,12 +242,24 @@ endfunction
 function! s:create_info_win()
   new
   let s:loc.info_buf = winbufnr(0)
-  nnoremap <silent> <buffer> q :bd!<cr>
-  nnoremap <silent> <buffer> Q :call <SID>win_close()<cr>
   nnoremap <silent> <buffer> ? :call <SID>help_info()<cr>
+  nnoremap <silent> <buffer> q :call <SID>win_close('info_buf')<cr>
+  nnoremap <silent> <buffer> Q :call <SID>win_close('info_buf', 'buf')<cr>
   nnoremap <silent> <buffer> o :call <SID>open_type()<cr>
-  " TODO: Should be able to open to github URL, deps openBrowser?
-  " nnoremap <silent> <buffer> O :call <SID>open_github()<cr>
+  nnoremap <silent> <buffer> O :call <SID>open_github()<cr>
+endfunction
+
+function! s:open_github()
+  if !exists(':OpenBrowser')
+    echoerr 'Requires Plugin: tyru/open-browser.vim'
+    return
+  endif
+  try
+    let plug_name = s:parse_plug_name()
+    silent exec 'OpenBrowser ' . 'https://github.com/' .  plug_name
+  catch
+    echoerr v:exception
+  endtry
 endfunction
 
 " Main window = default search one
@@ -253,13 +267,12 @@ function! s:create_main_win()
   execute 'vertical topleft new'
   let s:loc.tab = tabpagenr()
   let s:loc.buf = winbufnr(0)
-  nnoremap <silent> <buffer> q :call <SID>win_close()<cr>
+  nnoremap <silent> <buffer> ? :call <SID>help_win()<cr>
+  nnoremap <silent> <buffer> q :call <SID>win_close('info_buf', 'buf')<cr>
   nnoremap <silent> <buffer> i :call <SID>insert(0)<cr>
   nnoremap <silent> <buffer> I :call <SID>insert(1)<cr>
   nnoremap <silent> <buffer> o :call <SID>open_type()<cr>
-  " TODO: Should be able to open to github URL, deps openBrowser?
-  " nnoremap <silent> <buffer> O :call <SID>open_github()<cr>
-  nnoremap <silent> <buffer> ? :call <SID>help_win()<cr>
+  nnoremap <silent> <buffer> O :call <SID>open_github()<cr>
 endfunction
 
 function! s:open_win()
@@ -282,18 +295,19 @@ function! s:open_win()
   call append(0, ["Plug Search", "-----------"])
 endfunction
 
-" FIXME: Still bugged, sometimes closes orig buffer.
-function! s:win_close()
-  for key in ['info_buf', 'buf']
-    if s:loc[key] != -1
-      call s:switch_to(s:loc[key])
-      let s:loc[key] = -1
+function! s:win_close(...)
+  for bkey in a:000
+    if s:loc[bkey] != -1
+      call s:switch_to(s:loc[bkey])
+      let s:loc[bkey] = -1
       silent bdelete!
     endif
   endfor
-  let s:loc.tab = -1
-  let s:orig_loc = []
-  let s:lines_put = 0
+  if s:loc.buf == -1 && s:loc.info_buf == -1
+    let s:loc.tab = -1
+    let s:orig_loc = []
+    let s:lines_put = 0
+  endif
 endfunction
 
 function! s:win_exists(bufnr)
