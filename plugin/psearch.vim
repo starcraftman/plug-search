@@ -95,7 +95,7 @@ function! s:help(type)
 
   setl modifiable
   if getline(1)[0] != '?'
-    let buffer = s:mul_text('#', winwidth(0) * 0.5)
+    let buffer = s:mul_text('#', 30)
     call append(0, lines + [buffer])
   else
     exec printf('1,%dd', len(lines) + 1)
@@ -166,7 +166,7 @@ function! s:open_info()
     if s:switch_to(s:loc.info)
       silent %d _
     else
-      new
+      belowright new
       let s:loc.info = winbufnr(0)
       nnoremap <silent> <buffer> ? :call <SID>help('info')<cr>
       nnoremap <silent> <buffer> q :call <SID>win_close('info')<cr>
@@ -175,14 +175,14 @@ function! s:open_info()
       nnoremap <silent> <buffer> I :call <SID>insert()<cr> <bar> :call <SID>win_close('info', 'win')<cr>
       nnoremap <silent> <buffer> o :call <SID>open_type()<cr>
       nnoremap <silent> <buffer> O :call <SID>open_github()<cr>
+      if exists('g:syntax_on')
+        call s:syntax()
+      endif
+      let b:type = 'info'
     endif
 
     setl buftype=nofile bufhidden=wipe nobuflisted noswapfile nowrap cursorline modifiable
     setf psearch
-
-    if exists('g:syntax_on')
-      call s:syntax()
-    endif
 
     call s:fill_info(plug_name, plug)
     setl nomodifiable
@@ -232,6 +232,9 @@ endfunction
 
 function! s:move_and_describe(dir)
   exec 'normal! ' .  a:dir
+  if get(g:, 'psr_auto_open', 0) != 1
+    return
+  endif
   try
     call s:open_info()
     call s:switch_to(s:loc.win)
@@ -241,7 +244,7 @@ endfunction
 
 function! s:open_win()
   if empty(s:orig_loc)
-    let s:orig_loc = [tabpagenr(), winnr(), winsaveview()]
+    let s:orig_loc = [tabpagenr(), winbufnr(0), winsaveview()]
   endif
 
   if s:switch_to(s:loc.win)
@@ -256,25 +259,23 @@ function! s:open_win()
     nnoremap <silent> <buffer> I :call <SID>insert()<cr> <bar> :call <SID>win_close('info', 'win')<cr>
     nnoremap <silent> <buffer> o :call <SID>open_type()<cr>
     nnoremap <silent> <buffer> O :call <SID>open_github()<cr>
-    if get(g:, 'psr_auto_open', 0)
-      nnoremap <silent> <buffer> j :call <SID>move_and_describe('j')<cr>
-      nnoremap <silent> <buffer> k :call <SID>move_and_describe('k')<cr>
+    nnoremap <silent> <buffer> j :call <SID>move_and_describe('j')<cr>
+    nnoremap <silent> <buffer> k :call <SID>move_and_describe('k')<cr>
+    if exists('g:syntax_on')
+      call s:syntax()
     endif
   endif
 
   setl buftype=nofile bufhidden=wipe nobuflisted noswapfile nowrap cursorline modifiable
   setf psearch
-  if exists('g:syntax_on')
-    call s:syntax()
-  endif
   call append(0, ["Plug Search", "-----------"])
 endfunction
 
 function! s:win_close(...)
-  for bkey in a:000
-    if s:loc[bkey] != -1
-      call s:switch_to(s:loc[bkey])
-      let s:loc[bkey] = -1
+  for key in a:000
+    if s:loc[key] != -1
+      call s:switch_to(s:loc[key])
+      let s:loc[key] = -1
       silent bdelete!
     endif
   endfor
@@ -304,7 +305,7 @@ function! s:search(...)
   call s:open_win()
 
   if a:0 == 0
-    call append(3, keys(g:psr_plugs), 'i')
+    call append(3, keys(g:psr_plugs))
   else
     for [name, plug] in items(g:psr_plugs)
       let line = name . ': ' . plug['desc']
@@ -313,6 +314,7 @@ function! s:search(...)
       endif
     endfor
   endif
+  let b:type = 'search'
   exec '3,' . line('$') . 'sort i'
   setl nomodifiable
 endfunction
@@ -339,6 +341,7 @@ function! s:tags(...)
     endfor
     call append(3, tags)
   endif
+  let b:type = 'tags'
   exec '3,' . line('$') . 'sort i'
   setl nomodifiable
 endfunction
@@ -350,5 +353,6 @@ endfunction
 command! -nargs=* PSearch call s:search(<f-args>)
 command! -nargs=* -complete=customlist,s:tag_names PTags call s:tags(<f-args>)
 command! PT call s:tags('search')
+command! PLoc :echo string(s:orig_loc)
 
 " vim:set et sts=2 sw=2 ts=2:

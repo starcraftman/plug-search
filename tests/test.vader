@@ -2,6 +2,24 @@ Execute (Dump Test DBs):
   Log string(keys(g:psr_plugs))
   Log string(keys(g:psr_tags))
 
+Execute (Tags None):
+  PTags
+
+Expect (Tags None):
+  Plug Search
+  -----------
+
+  - buffers
+  - c++
+  - code-completion
+  - completion
+  - inactive
+  - indexing
+  - make
+  - mru
+  - python
+  - tags
+
 Execute (Tags One):
   PTags make
 
@@ -23,23 +41,17 @@ Expect (Tags Two):
   rdnetto/YCM-Generator
   Valloric/YouCompleteMe
 
-Execute (Tags All):
-  PTags
+Execute (Search None):
+  PSearch
 
-Expect (Tags All):
+Expect (Search None):
   Plug Search
   -----------
 
-  - buffers
-  - c++
-  - code-completion
-  - completion
-  - inactive
-  - indexing
-  - make
-  - mru
-  - python
-  - tags
+  ctrlpvim/ctrlp.vim
+  kien/ctrlp.vim
+  rdnetto/YCM-Generator
+  Valloric/YouCompleteMe
 
 Execute (Search One):
   PSearch You
@@ -51,12 +63,93 @@ Expect (Search One):
   rdnetto/YCM-Generator
   Valloric/YouCompleteMe
 
+Execute (Search Two):
+  PSearch You kien
+
+Expect (Search Tow):
+  Plug Search
+  -----------
+
+  kien/ctrlp.vim
+  rdnetto/YCM-Generator
+  Valloric/YouCompleteMe
+
+Execute (Win Help):
+  PSearch
+  normal ?
+
+Expect (Win Help):
+  ? Toggle this help text
+  q Close all open windows
+  i Insert Plug line into starting buffer
+  I Same as 'i', then close all windows
+  o Open plugin or tag under cursor
+  O Open plugin github project
+  ##############################
+  Plug Search
+  -----------
+
+  ctrlpvim/ctrlp.vim
+  kien/ctrlp.vim
+  rdnetto/YCM-Generator
+  Valloric/YouCompleteMe
+
+Execute (Info Help):
+  PSearch
+  normal 5ggo?
+
+Expect (Info Help):
+  ? Toggle this help text
+  q Close this window
+  Q Close all open windows
+  i Insert Plug line into starting buffer
+  I Same as 'i', then close all windows
+  o Open plugin or tag under cursor
+  O Open plugin github project
+  ##############################
+  kien/ctrlp.vim
+  --------------
+  Fuzzy file, buffer, mru... finder.
+
+  PLUGIN UNMAINTAINED
+  Active Fork: ctrlpvim/ctrlp.vim
+  Alternatives:
+  * ctrlpvim/ctrlp.vim
+  Tags:
+  - buffers
+  - inactive
+  - indexing
+  - mru
+  - tags
+
 Execute (Open Info):
-  PSearch kien
-  normal! 4gg
-  normal o
+  PSearch
+  normal 5ggo
 
 Expect (Open Info):
+  kien/ctrlp.vim
+  --------------
+  Fuzzy file, buffer, mru... finder.
+
+  PLUGIN UNMAINTAINED
+  Active Fork: ctrlpvim/ctrlp.vim
+  Alternatives:
+  * ctrlpvim/ctrlp.vim
+  Tags:
+  - buffers
+  - inactive
+  - indexing
+  - mru
+  - tags
+
+Execute (Open On Move):
+  let g:psr_auto_open = 1
+  PSearch
+  normal 4ggj
+  wincmd j
+  let g:psr_auto_open = 0
+
+Expect (Open On Move):
   kien/ctrlp.vim
   --------------
   Fuzzy file, buffer, mru... finder.
