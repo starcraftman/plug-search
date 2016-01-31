@@ -1,0 +1,38 @@
+{
+  "buffers": [
+    "kien/ctrlp.vim",
+    "ctrlpvim/ctrlp.vim"
+  ],
+  "c++": [
+    "rdnetto/YCM-Generator",
+    "Valloric/YouCompleteMe"
+  ],
+  "code-completion": [
+    "Valloric/YouCompleteMe"
+  ],
+  "completion": [
+    "Valloric/YouCompleteMe"
+  ],
+  "inactive": [
+    "kien/ctrlp.vim"
+  ],
+  "indexing": [
+    "kien/ctrlp.vim",
+    "ctrlpvim/ctrlp.vim"
+  ],
+  "make": [
+    "rdnetto/YCM-Generator"
+  ],
+  "mru": [
+    "kien/ctrlp.vim",
+    "ctrlpvim/ctrlp.vim"
+  ],
+  "python": [
+    "rdnetto/YCM-Generator",
+    "Valloric/YouCompleteMe"
+  ],
+  "tags": [
+    "kien/ctrlp.vim",
+    "ctrlpvim/ctrlp.vim"
+  ]
+}

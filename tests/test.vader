@@ -1,5 +1,4 @@
-Execute (Setup):
-  " TODO: Limit data, likely sourcing test dbs in
+Execute (Dump Test DBs):
   Log string(keys(g:psr_plugs))
   Log string(keys(g:psr_tags))
 
@@ -10,7 +9,7 @@ Execute (Open Window):
   quit!
 
 Execute (Search Tags):
-  PTags cmake
+  PTags make
   Assert stridx(getline(4), "rdnetto/YCM-Generator") != -1
   quit!
 
@@ -19,3 +18,24 @@ Execute (Search Term):
   Assert stridx(getline(4), "rdnetto/YCM-Generator") != -1
   Assert stridx(getline(5), "Valloric/YouCompleteMe") != -1
   quit!
+
+Execute (Open Info Window):
+  PSearch kien
+  normal! 4gg
+  normal o
+
+Expect (Open Info Window):
+  kien/ctrlp.vim
+  --------------
+  Fuzzy file, buffer, mru... finder.
+
+  PLUGIN UNMAINTAINED
+  Active Fork: ctrlpvim/ctrlp.vim
+  Alternatives:
+  * ctrlpvim/ctrlp.vim
+  Tags:
+  - buffers
+  - inactive
+  - indexing
+  - mru
+  - tags

@@ -3,6 +3,19 @@ ROOT=$(dirname $(dirname $(readlink -f $0)))
 STAGE=/tmp/vsearch-staging
 VIMRC="$STAGE/vimrc"
 
+# Replace real dbs with test ones during execution
+test_dbs() {
+  if [ "$1" = "undo" ]; then
+    rm "$ROOT/db.json" "$ROOT/tags.json"
+    mv "$ROOT/db.json_bak" "$ROOT/db.json"
+    mv "$ROOT/tags.json_bak" "$ROOT/tags.json"
+  else
+    mv "$ROOT/db.json" "$ROOT/db.json_bak"
+    mv "$ROOT/tags.json" "$ROOT/tags.json_bak"
+    cp "$ROOT/tests/db.json" "$ROOT/tests/tags.json" "$ROOT"
+  fi
+}
+
 if [ -d "$STAGE" ]; then
     rm -rf "$STAGE"
 fi
@@ -51,6 +64,8 @@ nnoremap <silent> <Space>h :wincmd h<CR>
 nnoremap <silent> <Space>l :wincmd l<CR>
 EOF
 
+test_dbs
+
 TEST_FILE="$ROOT/tests/test.vader"
 vim -u "$VIMRC" +PlugInstall +qa > /dev/null 2>&1
 if [ "$1" = '!' ]; then
@@ -58,6 +73,8 @@ if [ "$1" = '!' ]; then
 else
   vim -u "$VIMRC" -c "Vader $TEST_FILE"
 fi
+
+test_dbs "undo"
 
 jsonlint -q db.json
 jsonlint -q tags.json

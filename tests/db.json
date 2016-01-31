@@ -1,0 +1,54 @@
+{
+  "ctrlpvim/ctrlp.vim": {
+    "alts": [
+      "kien/ctrlp.vim"
+    ],
+    "desc": "Fuzzy file, buffer, mru... finder.",
+    "tags": [
+      "buffers",
+      "indexing",
+      "mru",
+      "tags"
+    ]
+  },
+  "kien/ctrlp.vim": {
+    "fork": "ctrlpvim/ctrlp.vim",
+    "alts": [
+      "ctrlpvim/ctrlp.vim"
+    ],
+    "desc": "Fuzzy file, buffer, mru... finder.",
+    "tags": [
+      "buffers",
+      "inactive",
+      "indexing",
+      "mru",
+      "tags"
+    ]
+  },
+  "rdnetto/YCM-Generator": {
+    "desc": "Generate config files for YouCompleteMe",
+    "tags": [
+      "c++",
+      "make",
+      "python"
+    ],
+    "opts": {
+      "branch": "stable"
+    }
+  },
+  "Valloric/YouCompleteMe": {
+    "desc": "A code-completion engine for Vim",
+    "suggests": [
+      "rdnetto/YCM-Generator"
+    ],
+    "tags": [
+      "c++",
+      "code-completion",
+      "completion",
+      "python"
+    ],
+    "opts": {
+      "do": "./install.py"
+    }
+  }
+}
