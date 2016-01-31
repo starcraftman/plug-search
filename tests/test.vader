@@ -2,29 +2,61 @@ Execute (Dump Test DBs):
   Log string(keys(g:psr_plugs))
   Log string(keys(g:psr_tags))
 
-Execute (Open Window):
-  PSearch zzz
-  AssertEqual getline(1), "Plug Search"
-  AssertEqual getline(2), "-----------"
-  quit!
-
-Execute (Search Tags):
+Execute (Search Tags One):
   PTags make
-  Assert stridx(getline(4), "rdnetto/YCM-Generator") != -1
-  quit!
+
+Expect (Search Tags One: Expect):
+  Plug Search
+  -----------
+
+  rdnetto/YCM-Generator
+
+Execute (Search Tags Two):
+  PTags buffers c++
+
+Expect (Search Tags Two: Expect):
+  Plug Search
+  -----------
+
+  ctrlpvim/ctrlp.vim
+  kien/ctrlp.vim
+  rdnetto/YCM-Generator
+  Valloric/YouCompleteMe
+
+Execute (Search Tags All):
+  PTags
+
+Expect (Search Tags All: Expect):
+  Plug Search
+  -----------
+
+  - buffers
+  - c++
+  - code-completion
+  - completion
+  - inactive
+  - indexing
+  - make
+  - mru
+  - python
+  - tags
 
 Execute (Search Term):
   PSearch You
-  Assert stridx(getline(4), "rdnetto/YCM-Generator") != -1
-  Assert stridx(getline(5), "Valloric/YouCompleteMe") != -1
-  quit!
 
-Execute (Open Info Window):
+Expect (Search Term: Expect):
+  Plug Search
+  -----------
+
+  rdnetto/YCM-Generator
+  Valloric/YouCompleteMe
+
+Execute (Open Info):
   PSearch kien
   normal! 4gg
   normal o
 
-Expect (Open Info Window):
+Expect (Open Info: Expect):
   kien/ctrlp.vim
   --------------
   Fuzzy file, buffer, mru... finder.

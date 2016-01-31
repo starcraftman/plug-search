@@ -136,7 +136,7 @@ function! s:fill_info(plug_name, plug)
     let lines += ["PLUGIN UNMAINTAINED", "Active Fork: " . fork]
   endif
 
-  let alts = deepcopy(get(a:plug, 'alts', []))
+  let alts = deepcopy(sort(get(a:plug, 'alts', [])), 'i')
   if len(alts)
     let lines += ["Alternatives:"] + map(alts, '"* " . v:val')
   endif
@@ -147,12 +147,12 @@ function! s:fill_info(plug_name, plug)
     let lines += ["Standard Opts: " . string(opts)]
   endif
 
-  let suggests = deepcopy(get(a:plug, 'suggests', []))
+  let suggests = deepcopy(sort(get(a:plug, 'suggests', [])), 'i')
   if len(suggests)
     let lines += ["Suggests:"] + map(suggests, '"* " . v:val')
   endif
 
-  let lines += ["Tags:"] + map(deepcopy(a:plug.tags), '"- " . v:val')
+  let lines += ["Tags:"] + map(deepcopy(sort(a:plug.tags)), '"- " . v:val')
 
   call append(0, header)
   call append(len(header) + 1, lines)
@@ -303,12 +303,17 @@ endfunction
 function! s:search(...)
   call s:open_win()
 
-  for [name, plug] in items(g:psr_plugs)
-    let line = name . ': ' . plug['desc']
-    if s:match_str(line, a:000)
-      call append(3, name)
-    endif
-  endfor
+  if a:0 == 0
+    call append(3, keys(g:psr_plugs), 'i')
+  else
+    for [name, plug] in items(g:psr_plugs)
+      let line = name . ': ' . plug['desc']
+      if s:match_str(line, a:000)
+        call append(3, name)
+      endif
+    endfor
+  endif
+  exec '3,' . line('$') . 'sort i'
   setl nomodifiable
 endfunction
 
@@ -326,7 +331,7 @@ function! s:tags(...)
   call s:open_win()
 
   if a:0 == 0
-    call append(3, map(sort(keys(g:psr_tags)), '"- " . v:val'))
+    call append(3, map(keys(g:psr_tags), '"- " . v:val'))
   else
     let tags = []
     for term in a:000
@@ -334,6 +339,7 @@ function! s:tags(...)
     endfor
     call append(3, tags)
   endif
+  exec '3,' . line('$') . 'sort i'
   setl nomodifiable
 endfunction
 
@@ -341,7 +347,7 @@ function! s:tag_names(...)
   return sort(filter(keys(g:psr_tags), 'stridx(v:val, a:1) == 0'))
 endfunction
 
-command! -nargs=+ PSearch call s:search(<f-args>)
+command! -nargs=* PSearch call s:search(<f-args>)
 command! -nargs=* -complete=customlist,s:tag_names PTags call s:tags(<f-args>)
 command! PT call s:tags('search')
 
