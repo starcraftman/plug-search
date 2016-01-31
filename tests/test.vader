@@ -2,19 +2,19 @@ Execute (Dump Test DBs):
   Log string(keys(g:psr_plugs))
   Log string(keys(g:psr_tags))
 
-Execute (Search Tags One):
+Execute (Tags One):
   PTags make
 
-Expect (Search Tags One: Expect):
+Expect (Tags One):
   Plug Search
   -----------
 
   rdnetto/YCM-Generator
 
-Execute (Search Tags Two):
+Execute (Tags Two):
   PTags buffers c++
 
-Expect (Search Tags Two: Expect):
+Expect (Tags Two):
   Plug Search
   -----------
 
@@ -23,10 +23,10 @@ Expect (Search Tags Two: Expect):
   rdnetto/YCM-Generator
   Valloric/YouCompleteMe
 
-Execute (Search Tags All):
+Execute (Tags All):
   PTags
 
-Expect (Search Tags All: Expect):
+Expect (Tags All):
   Plug Search
   -----------
 
@@ -41,10 +41,10 @@ Expect (Search Tags All: Expect):
   - python
   - tags
 
-Execute (Search Term):
+Execute (Search One):
   PSearch You
 
-Expect (Search Term: Expect):
+Expect (Search One):
   Plug Search
   -----------
 
@@ -56,7 +56,7 @@ Execute (Open Info):
   normal! 4gg
   normal o
 
-Expect (Open Info: Expect):
+Expect (Open Info):
   kien/ctrlp.vim
   --------------
   Fuzzy file, buffer, mru... finder.
