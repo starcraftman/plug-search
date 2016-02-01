@@ -6,8 +6,8 @@ Execute (Tags None):
   PTags
 
 Expect (Tags None):
-  Plug Search
-  -----------
+  All Known Tags
+  --------------
 
   - buffers
   - c++
@@ -24,8 +24,8 @@ Execute (Tags One):
   PTags make
 
 Expect (Tags One):
-  Plug Search
-  -----------
+  Plugins Tagged With: make
+  -------------------------
 
   rdnetto/YCM-Generator
 
@@ -33,8 +33,8 @@ Execute (Tags Two):
   PTags buffers c++
 
 Expect (Tags Two):
-  Plug Search
-  -----------
+  Plugins Tagged With: buffers or c++
+  -----------------------------------
 
   ctrlpvim/ctrlp.vim
   kien/ctrlp.vim
@@ -45,8 +45,8 @@ Execute (Search None):
   PSearch
 
 Expect (Search None):
-  Plug Search
-  -----------
+  All Known Plugins
+  -----------------
 
   ctrlpvim/ctrlp.vim
   kien/ctrlp.vim
@@ -57,8 +57,8 @@ Execute (Search One):
   PSearch You
 
 Expect (Search One):
-  Plug Search
-  -----------
+  Plugins Matching: You
+  ---------------------
 
   rdnetto/YCM-Generator
   Valloric/YouCompleteMe
@@ -67,8 +67,8 @@ Execute (Search Two):
   PSearch You kien
 
 Expect (Search Tow):
-  Plug Search
-  -----------
+  Plugins Matching: You or kien
+  -----------------------------
 
   kien/ctrlp.vim
   rdnetto/YCM-Generator
@@ -86,8 +86,8 @@ Expect (Win Help):
   o Open plugin or tag under cursor
   O Open plugin github project
   ##############################
-  Plug Search
-  -----------
+  All Known Plugins
+  -----------------
 
   ctrlpvim/ctrlp.vim
   kien/ctrlp.vim
@@ -122,11 +122,11 @@ Expect (Info Help):
   - mru
   - tags
 
-Execute (Open Info):
+Execute (Open Info: Search):
   PSearch
   normal 5ggo
 
-Expect (Open Info):
+Expect (Open Info: Search):
   kien/ctrlp.vim
   --------------
   Fuzzy file, buffer, mru... finder.
@@ -142,14 +142,25 @@ Expect (Open Info):
   - mru
   - tags
 
-Execute (Open On Move):
+Execute (Open Info: Tags):
+  PTags
+  normal 5ggo
+
+Expect (Open Info: Tags):
+  Plugins Tagged With: c++
+  ------------------------
+
+  rdnetto/YCM-Generator
+  Valloric/YouCompleteMe
+
+Execute (Open On Move: Search):
   let g:psr_auto_open = 1
   PSearch
   normal 4ggj
   wincmd j
   let g:psr_auto_open = 0
 
-Expect (Open On Move):
+Expect (Open On Move: Search):
   kien/ctrlp.vim
   --------------
   Fuzzy file, buffer, mru... finder.
@@ -164,3 +175,17 @@ Expect (Open On Move):
   - indexing
   - mru
   - tags
+
+Execute (Open On Move: Tags):
+  let g:psr_auto_open = 1
+  PTags
+  normal 4ggj
+  wincmd j
+  let g:psr_auto_open = 0
+
+Expect (Open On Move: Tags):
+  Plugins Tagged With: c++
+  ------------------------
+
+  rdnetto/YCM-Generator
+  Valloric/YouCompleteMe

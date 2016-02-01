@@ -2,7 +2,8 @@
 " ================================
 " TODO: Format inserted lines with = . As go? Only on close?
 " TODO: Code completion
-" TODO: Perhaps provide j/k option for PTags window.
+" TODO: Open downloaded README from github root, ctrl+R
+" TODO: Allow going back forwards with u/ctrl-r, handle nomod
 if exists('g:psr_loaded')
   finish
 endif
@@ -62,7 +63,8 @@ function! s:syntax()
   syn match psrRepo    #/[0-9a-zA-Z\-.]\+#ms=s+1
   syn match psrWarning #^PLUGIN UNMAINTAINED#
   syn match psrTitle   #^[A-Z][0-9a-zA-Z ]\+:#he=e-1
-  syn match psrTitle   #^Plug Search#
+  syn match psrTitle   #^All Known Plugins#
+  syn match psrTitle   #^All Known Tags#
   hi def link psrComment Comment
   hi def link psrRepo    Repeat
   hi def link psrTag     Function
@@ -158,37 +160,57 @@ function! s:fill_info(plug_name, plug)
   call append(len(header) + 1, lines)
 endfunction
 
+function! s:info_on_tag()
+  let tag_name = s:parse_tag_name()
+  echomsg tag_name
+  let plugs = g:psr_tags[tag_name]
+
+  call s:open_info()
+
+  let header = 'Plugins Tagged With: ' . tag_name
+  call append(0, [header, s:mul_text('-', len(header))])
+  call append(3, plugs)
+  exec '3,' . line('$') . 'sort i'
+  setl nomodifiable
+endfunction
+
+function! s:info_on_plugin()
+  let plug_name = s:parse_plug_name()
+  let plug = s:get_plug_entry(plug_name)
+
+  call s:open_info()
+
+  call s:fill_info(plug_name, plug)
+  setl nomodifiable
+endfunction
+
 function! s:open_info()
-  try
-    let plug_name = s:parse_plug_name()
-    let plug = s:get_plug_entry(plug_name)
+  if s:switch_to(s:loc.info)
+    silent %d _
+  else
+    belowright new
+    let s:loc.info = winbufnr(0)
+    nnoremap <silent> <buffer> ? :call <SID>help('info')<cr>
+    nnoremap <silent> <buffer> q :call <SID>win_close('info')<cr>
+    nnoremap <silent> <buffer> Q :call <SID>win_close('info', 'win')<cr>
+    nnoremap <silent> <buffer> i :call <SID>insert()<cr>
+    nnoremap <silent> <buffer> I :call <SID>insert()<cr> <bar> :call <SID>win_close('info', 'win')<cr>
+    nnoremap <silent> <buffer> o :call <SID>open_type()<cr>
+    nnoremap <silent> <buffer> O :call <SID>open_github()<cr>
+  endif
 
-    if s:switch_to(s:loc.info)
-      silent %d _
-    else
-      belowright new
-      let s:loc.info = winbufnr(0)
-      nnoremap <silent> <buffer> ? :call <SID>help('info')<cr>
-      nnoremap <silent> <buffer> q :call <SID>win_close('info')<cr>
-      nnoremap <silent> <buffer> Q :call <SID>win_close('info', 'win')<cr>
-      nnoremap <silent> <buffer> i :call <SID>insert()<cr>
-      nnoremap <silent> <buffer> I :call <SID>insert()<cr> <bar> :call <SID>win_close('info', 'win')<cr>
-      nnoremap <silent> <buffer> o :call <SID>open_type()<cr>
-      nnoremap <silent> <buffer> O :call <SID>open_github()<cr>
-      if exists('g:syntax_on')
-        call s:syntax()
-      endif
-      let b:type = 'info'
-    endif
+  setl buftype=nofile bufhidden=wipe nobuflisted noswapfile nowrap cursorline modifiable
+  setf psearch
 
-    setl buftype=nofile bufhidden=wipe nobuflisted noswapfile nowrap cursorline modifiable
-    setf psearch
+  if exists('g:syntax_on')
+    call s:syntax()
+  endif
+  let b:type = 'info'
+endfunction
 
-    call s:fill_info(plug_name, plug)
-    setl nomodifiable
-  catch
-    echoerr v:exception
-  endtry
+function! s:win_exists(bufnr)
+  let buflist = tabpagebuflist(s:loc.tab)
+  return !empty(buflist) && index(buflist, a:bufnr) >= 0
 endfunction
 
 function! s:switch_to(bufnr)
@@ -211,9 +233,13 @@ endfunction
 
 function! s:open_type()
   try
-    call s:tags(s:parse_tag_name())
+    call s:info_on_tag()
   catch
-    call s:open_info()
+    try
+      call s:info_on_plugin()
+    catch
+      echoerr "Could not parse plugin or tag."
+    endtry
   endtry
 endfunction
 
@@ -236,7 +262,7 @@ function! s:move_and_describe(dir)
     return
   endif
   try
-    call s:open_info()
+    call s:open_type()
     call s:switch_to(s:loc.win)
   catch
   endtry
@@ -261,14 +287,13 @@ function! s:open_win()
     nnoremap <silent> <buffer> O :call <SID>open_github()<cr>
     nnoremap <silent> <buffer> j :call <SID>move_and_describe('j')<cr>
     nnoremap <silent> <buffer> k :call <SID>move_and_describe('k')<cr>
-    if exists('g:syntax_on')
-      call s:syntax()
-    endif
   endif
 
   setl buftype=nofile bufhidden=wipe nobuflisted noswapfile nowrap cursorline modifiable
   setf psearch
-  call append(0, ["Plug Search", "-----------"])
+  if exists('g:syntax_on')
+    call s:syntax()
+  endif
 endfunction
 
 function! s:win_close(...)
@@ -287,11 +312,6 @@ function! s:win_close(...)
   endif
 endfunction
 
-function! s:win_exists(bufnr)
-  let buflist = tabpagebuflist(s:loc.tab)
-  return !empty(buflist) && index(buflist, a:bufnr) >= 0
-endfunction
-
 function! s:match_str(haystack, needles)
   for needle in a:needles
     if stridx(a:haystack, needle) != -1
@@ -305,8 +325,12 @@ function! s:search(...)
   call s:open_win()
 
   if a:0 == 0
+    let title = "All Known Plugins"
+    call append(0, [title, s:mul_text('-', len(title))])
     call append(3, keys(g:psr_plugs))
   else
+    let title = "Plugins Matching: " . join(a:000, ' or ')
+    call append(0, [title, s:mul_text('-', len(title))])
     for [name, plug] in items(g:psr_plugs)
       let line = name . ': ' . plug['desc']
       if s:match_str(line, a:000)
@@ -333,12 +357,16 @@ function! s:tags(...)
   call s:open_win()
 
   if a:0 == 0
+    let title = "All Known Tags"
+    call append(0, [title, s:mul_text('-', len(title))])
     call append(3, map(keys(g:psr_tags), '"- " . v:val'))
   else
     let tags = []
     for term in a:000
       let tags = s:merge_lists(tags, get(g:psr_tags, term, []))
     endfor
+    let title = "Plugins Tagged With: " . join(a:000, ' or ')
+    call append(0, [title, s:mul_text('-', len(title))])
     call append(3, tags)
   endif
   let b:type = 'tags'
