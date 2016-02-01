@@ -42,12 +42,17 @@ catch
   colorscheme desert
 endtry
 
+set shell=/bin/bash
 set number
 set ruler
-set shell=/bin/bash
 set showcmd
 set wildmenu
 set wildmode=longest,list,full
+set backspace=indent,eol,start
+set timeout
+set timeoutlen=500
+set cursorline
+set scrolloff=10
 
 inoremap jk <Esc>
 vnoremap i  <Esc>

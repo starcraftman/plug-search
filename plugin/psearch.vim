@@ -2,16 +2,15 @@
 " ================================
 " TODO: Format inserted lines with = . As go? Only on close?
 " TODO: Code completion
-" TODO: Open downloaded README from github root, ctrl+R
 " TODO: Allow going back forwards with u/ctrl-r, handle nomod
 if exists('g:psr_loaded')
   finish
 endif
 let g:psr_loaded = 1
 
+let s:loc = {'tab': -1, 'win': -1, 'info': -1}
 let s:orig_loc = []
 let s:lines_put = 0
-let s:loc = {'tab': -1, 'win': -1, 'info': -1}
 let s:root = fnamemodify(resolve(expand('<sfile>:p')), ':h:h')
 let g:psr_plugs = eval(join(readfile(s:root . '/db.json')))
 let g:psr_tags = eval(join(readfile(s:root . '/tags.json')))
@@ -184,6 +183,30 @@ function! s:info_on_plugin()
   setl nomodifiable
 endfunction
 
+function! s:github_uri(plug_name)
+  return 'https://github.com/' .  a:plug_name
+endfunction
+
+function! s:github_readme()
+  try
+    let github_uri = s:github_uri(s:parse_plug_name())
+    let temp_d = tempname()
+    call system(printf('git clone --depth 1 %s %s', github_uri, temp_d))
+    let readme = split(globpath(temp_d, 'README*'))
+    if empty(readme)
+      let readme = split(globpath(temp_d, 'readme*'))
+    endif
+
+    exec 'tabnew ' . readme[0]
+    nnoremap <silent> <buffer> q :bd!<cr>
+    setl buftype=nofile bufhidden=wipe nobuflisted noswapfile nowrap cursorline nomodifiable
+
+    call system('rm -rf ' . temp_d)
+  catch
+    echoerr v:exception
+  endtry
+endfunction
+
 function! s:open_info()
   if s:switch_to(s:loc.info)
     silent %d _
@@ -196,7 +219,8 @@ function! s:open_info()
     nnoremap <silent> <buffer> i :call <SID>insert()<cr>
     nnoremap <silent> <buffer> I :call <SID>insert()<cr> <bar> :call <SID>win_close('info', 'win')<cr>
     nnoremap <silent> <buffer> o :call <SID>open_type()<cr>
-    nnoremap <silent> <buffer> O :call <SID>open_github()<cr>
+    nnoremap <silent> <buffer> O :call <SID>github_readme()<cr>
+    nnoremap <silent> <buffer> <C-G> :call <SID>open_github()<cr>
   endif
 
   setl buftype=nofile bufhidden=wipe nobuflisted noswapfile nowrap cursorline modifiable
@@ -250,7 +274,7 @@ function! s:open_github()
   endif
   try
     let plug_name = s:parse_plug_name()
-    silent exec 'OpenBrowser ' . 'https://github.com/' .  plug_name
+    silent exec 'OpenBrowser ' . s:github_uri(plug_name)
   catch
     echoerr v:exception
   endtry
@@ -284,7 +308,8 @@ function! s:open_win()
     nnoremap <silent> <buffer> i :call <SID>insert()<cr>
     nnoremap <silent> <buffer> I :call <SID>insert()<cr> <bar> :call <SID>win_close('info', 'win')<cr>
     nnoremap <silent> <buffer> o :call <SID>open_type()<cr>
-    nnoremap <silent> <buffer> O :call <SID>open_github()<cr>
+    nnoremap <silent> <buffer> O :call <SID>github_readme()<cr>
+    nnoremap <silent> <buffer> <C-G> :call <SID>open_github()<cr>
     nnoremap <silent> <buffer> j :call <SID>move_and_describe('j')<cr>
     nnoremap <silent> <buffer> k :call <SID>move_and_describe('k')<cr>
   endif
