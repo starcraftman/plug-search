@@ -58,13 +58,14 @@ function! s:syntax()
   syn match psrComment /[#\-]\+/
   syn match psrTag     #- .*#hs=s+2
   syn match psrTag     #^[^ \-] #he=e-1
-  syn match psrUser    #[0-9a-zA-Z\-.]\+/#me=e-1,he=e-1
-  syn match psrRepo    #/[0-9a-zA-Z\-.]\+#ms=s+1
+  syn match psrUser    #[0-9a-zA-Z.-]\+/#me=e-1,he=e-1
+  syn match psrRepo    #/[0-9a-zA-Z.-]\+#ms=s+1
   syn match psrWarning #^PLUGIN UNMAINTAINED#
   syn match psrTitle   #^[A-Z][0-9a-zA-Z ]\+:#he=e-1
   syn match psrTitle   #^All Known Plugins#
   syn match psrTitle   #^All Known Tags#
-  syn match psrTerms   #'\w\+'#hs=s+1,he=e-1
+  " FIXME: Highlighting dict entries of 'Opt' info segment
+  syn match psrTerms   #'[0-9a-zA-Z.-]\+'#hs=s+1,he=e-1
   hi def link psrComment Comment
   hi def link psrRepo    Repeat
   hi def link psrTag     Function
@@ -168,7 +169,7 @@ function! s:info_on_tag()
 
   call s:open_info()
 
-  let header = 'Plugins Tagged With: ' . tag_name
+  let header = "Plugins Tagged With: '" . tag_name . "'"
   call append(0, [header, s:mul_text('-', len(header))])
   call append(3, plugs)
   exec '3,' . line('$') . 'sort i'
