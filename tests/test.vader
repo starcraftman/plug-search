@@ -24,8 +24,8 @@ Execute (Tags One):
   PTags make
 
 Expect (Tags One):
-  Plugins Tagged With: make
-  -------------------------
+  Plugins Tagged With: 'make'
+  ---------------------------
 
   rdnetto/YCM-Generator
 
@@ -33,8 +33,8 @@ Execute (Tags Two):
   PTags buffers c++
 
 Expect (Tags Two):
-  Plugins Tagged With: buffers or c++
-  -----------------------------------
+  Plugins Tagged With: 'buffers' or 'c++'
+  ---------------------------------------
 
   ctrlpvim/ctrlp.vim
   kien/ctrlp.vim
@@ -57,8 +57,8 @@ Execute (Search One):
   PSearch You
 
 Expect (Search One):
-  Plugins Matching: You
-  ---------------------
+  Plugins Matching: 'You'
+  -----------------------
 
   rdnetto/YCM-Generator
   Valloric/YouCompleteMe
@@ -67,8 +67,8 @@ Execute (Search Two):
   PSearch You kien
 
 Expect (Search Tow):
-  Plugins Matching: You or kien
-  -----------------------------
+  Plugins Matching: 'You' or 'kien'
+  ---------------------------------
 
   kien/ctrlp.vim
   rdnetto/YCM-Generator

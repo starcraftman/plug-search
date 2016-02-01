@@ -64,12 +64,14 @@ function! s:syntax()
   syn match psrTitle   #^[A-Z][0-9a-zA-Z ]\+:#he=e-1
   syn match psrTitle   #^All Known Plugins#
   syn match psrTitle   #^All Known Tags#
+  syn match psrTerms   #'\w\+'#hs=s+1,he=e-1
   hi def link psrComment Comment
   hi def link psrRepo    Repeat
   hi def link psrTag     Function
   hi def link psrTitle   Title
   hi def link psrUser    Type
   hi def link psrWarning Error
+  hi def link psrTerms   Function
 endfunction
 
 function! s:help(type)
@@ -346,6 +348,14 @@ function! s:match_str(haystack, needles)
   return 0
 endfunction
 
+function! s:join_terms(terms)
+  if empty(a:terms)
+    return ''
+  else
+    return "'" . join(a:terms, "' or '") . "'"
+  endif
+endfunction
+
 function! s:search(...)
   call s:open_win()
 
@@ -354,7 +364,7 @@ function! s:search(...)
     call append(0, [title, s:mul_text('-', len(title))])
     call append(3, keys(g:psr_plugs))
   else
-    let title = "Plugins Matching: " . join(a:000, ' or ')
+    let title = "Plugins Matching: " . s:join_terms(a:000)
     call append(0, [title, s:mul_text('-', len(title))])
     for [name, plug] in items(g:psr_plugs)
       let line = name . ': ' . plug['desc']
@@ -390,7 +400,7 @@ function! s:tags(...)
     for term in a:000
       let tags = s:merge_lists(tags, get(g:psr_tags, term, []))
     endfor
-    let title = "Plugins Tagged With: " . join(a:000, ' or ')
+    let title = "Plugins Tagged With: " . s:join_terms(a:000)
     call append(0, [title, s:mul_text('-', len(title))])
     call append(3, tags)
   endif
