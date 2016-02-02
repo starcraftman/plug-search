@@ -83,8 +83,9 @@ Expect (Win Help):
   q Close all open windows
   i Insert Plug line into starting buffer
   I Same as 'i', then close all windows
+  m Toggle the open on move option
   o Open plugin or tag under cursor
-  O Open plugin github project
+  O Open plugin's github README in a new tab
   ##############################
   All Known Plugins
   -----------------
@@ -105,7 +106,7 @@ Expect (Info Help):
   i Insert Plug line into starting buffer
   I Same as 'i', then close all windows
   o Open plugin or tag under cursor
-  O Open plugin github project
+  O Open plugin's github README in a new tab
   ##############################
   kien/ctrlp.vim
   --------------
@@ -147,8 +148,8 @@ Execute (Open Info: Tags):
   normal 5ggo
 
 Expect (Open Info: Tags):
-  Plugins Tagged With: c++
-  ------------------------
+  Plugins Tagged With: 'c++'
+  --------------------------
 
   rdnetto/YCM-Generator
   Valloric/YouCompleteMe
@@ -184,8 +185,8 @@ Execute (Open On Move: Tags):
   let g:psr_auto_open = 0
 
 Expect (Open On Move: Tags):
-  Plugins Tagged With: c++
-  ------------------------
+  Plugins Tagged With: 'c++'
+  --------------------------
 
   rdnetto/YCM-Generator
   Valloric/YouCompleteMe

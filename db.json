@@ -34,6 +34,9 @@
   },
   "honza/vim-snippets": {
     "desc": "Standard snippets for a variety of languages",
+    "suggests": [
+      "SirVir/ultisnips"
+    ],
     "tags": [
       "snippets"
     ]

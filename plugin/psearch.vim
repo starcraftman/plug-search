@@ -84,7 +84,7 @@ function! s:help(type)
         \ "i Insert Plug line into starting buffer",
         \ "I Same as 'i', then close all windows",
         \ "o Open plugin or tag under cursor",
-        \ 'O Open plugin github project',
+        \ "O Open plugin's github README in a new tab",
         \ ]
   else
     let lines =  [
@@ -94,7 +94,7 @@ function! s:help(type)
         \ "I Same as 'i', then close all windows",
         \ "m Toggle the open on move option",
         \ "o Open plugin or tag under cursor",
-        \ 'O Open plugin github project',
+        \ "O Open plugin's github README in a new tab",
         \ ]
   endif
 
@@ -138,26 +138,26 @@ function! s:fill_info(plug_name, plug)
 
   let fork = get(a:plug, 'fork', '')
   if fork != ''
-    let lines += ["PLUGIN UNMAINTAINED", "Active Fork: " . fork]
+    let lines += ['PLUGIN UNMAINTAINED', 'Active Fork: ' . fork]
   endif
 
   let alts = deepcopy(sort(get(a:plug, 'alts', [])), 'i')
   if len(alts)
-    let lines += ["Alternatives:"] + map(alts, '"* " . v:val')
+    let lines += ['Alternatives:'] + map(alts, "'* ' . v:val")
   endif
 
   let opts = get(a:plug, 'opts', {})
   if len(opts)
     " FIXME: Formatting of dict?
-    let lines += ["Standard Opts: " . string(opts)]
+    let lines += ['Standard Opts: ' . string(opts)]
   endif
 
   let suggests = deepcopy(sort(get(a:plug, 'suggests', [])), 'i')
   if len(suggests)
-    let lines += ["Suggests:"] + map(suggests, '"* " . v:val')
+    let lines += ['Suggests:'] + map(suggests, "'* ' . v:val")
   endif
 
-  let lines += ["Tags:"] + map(deepcopy(sort(a:plug.tags)), '"- " . v:val')
+  let lines += ['Tags:'] + map(deepcopy(sort(a:plug.tags)), "'- ' . v:val")
 
   call append(0, header)
   call append(len(header) + 1, lines)
@@ -265,7 +265,7 @@ function! s:open_type()
     try
       call s:info_on_plugin()
     catch
-      echoerr "Could not parse plugin or tag."
+      echoerr 'Could not parse plugin or tag.'
     endtry
   endtry
 endfunction
@@ -370,11 +370,11 @@ function! s:search(...)
   call s:open_win()
 
   if a:0 == 0
-    let title = "All Known Plugins"
+    let title = 'All Known Plugins'
     call append(0, [title, s:mul_text('-', len(title))])
     call append(3, keys(g:psr_plugs))
   else
-    let title = "Plugins Matching: " . s:join_terms(a:000)
+    let title = 'Plugins Matching: ' . s:join_terms(a:000)
     call append(0, [title, s:mul_text('-', len(title))])
     for [name, plug] in items(g:psr_plugs)
       let line = name . ': ' . plug['desc']
@@ -402,15 +402,15 @@ function! s:tags(...)
   call s:open_win()
 
   if a:0 == 0
-    let title = "All Known Tags"
+    let title = 'All Known Tags'
     call append(0, [title, s:mul_text('-', len(title))])
-    call append(3, map(keys(g:psr_tags), '"- " . v:val'))
+    call append(3, map(keys(g:psr_tags), "'- ' . v:val"))
   else
     let tags = []
     for term in a:000
       let tags = s:merge_lists(tags, get(g:psr_tags, term, []))
     endfor
-    let title = "Plugins Tagged With: " . s:join_terms(a:000)
+    let title = 'Plugins Tagged With: ' . s:join_terms(a:000)
     call append(0, [title, s:mul_text('-', len(title))])
     call append(3, tags)
   endif
