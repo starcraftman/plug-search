@@ -58,14 +58,14 @@ function! s:syntax()
   syn match psrComment /[#\-]\+/
   syn match psrTag     #- .*#hs=s+2
   syn match psrTag     #^[^ \-] #he=e-1
-  syn match psrUser    #[0-9a-zA-Z.-]\+/#me=e-1,he=e-1
-  syn match psrRepo    #/[0-9a-zA-Z.-]\+#ms=s+1
+  syn match psrUser    #[0-9a-zA-Z.\-]\+/#me=e-1,he=e-1
+  syn match psrRepo    #/[0-9a-zA-Z.\-]\+#ms=s+1
   syn match psrWarning #^PLUGIN UNMAINTAINED#
   syn match psrTitle   #^[A-Z][0-9a-zA-Z ]\+:#he=e-1
   syn match psrTitle   #^All Known Plugins#
   syn match psrTitle   #^All Known Tags#
   " FIXME: Highlighting dict entries of 'Opt' info segment
-  syn match psrTerms   #'[0-9a-zA-Z.-]\+'#hs=s+1,he=e-1
+  syn match psrTerms   #'[0-9a-zA-Z.\-\+]\+'#hs=s+1,he=e-1
   hi def link psrComment Comment
   hi def link psrRepo    Repeat
   hi def link psrTag     Function
@@ -92,6 +92,7 @@ function! s:help(type)
         \ "q Close all open windows",
         \ "i Insert Plug line into starting buffer",
         \ "I Same as 'i', then close all windows",
+        \ "m Toggle the open on move option",
         \ "o Open plugin or tag under cursor",
         \ 'O Open plugin github project',
         \ ]
@@ -164,7 +165,6 @@ endfunction
 
 function! s:info_on_tag()
   let tag_name = s:parse_tag_name()
-  echomsg tag_name
   let plugs = g:psr_tags[tag_name]
 
   call s:open_info()
@@ -310,6 +310,7 @@ function! s:open_win()
     nnoremap <silent> <buffer> q :call <SID>win_close('info', 'win')<cr>
     nnoremap <silent> <buffer> i :call <SID>insert()<cr>
     nnoremap <silent> <buffer> I :call <SID>insert()<cr> <bar> :call <SID>win_close('info', 'win')<cr>
+    nnoremap <silent> <buffer> m :let g:psr_auto_open = !get(g:, 'psr_auto_open', 0)<cr>
     nnoremap <silent> <buffer> o :call <SID>open_type()<cr>
     nnoremap <silent> <buffer> O :call <SID>github_readme()<cr>
     nnoremap <silent> <buffer> <C-G> :call <SID>open_github()<cr>
