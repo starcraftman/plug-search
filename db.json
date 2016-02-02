@@ -1,6 +1,6 @@
 {
   "artur-shaik/vim-javacomplete2": {
-    "desc": "Code completion for Java programming.",
+    "desc": "Code completion for Java programming",
     "tags": [
       "code-completion",
       "completion",
@@ -9,10 +9,10 @@
   },
   "ctrlpvim/ctrlp.vim": {
     "alts": [
-      "junegunn/fzf",
+      "junegunn/fzf.vim",
       "kien/ctrlp.vim"
     ],
-    "desc": "Fuzzy file, buffer, mru... finder.",
+    "desc": "Fuzzy file, buffer, mru... finder",
     "tags": [
       "indexing",
       "search",
@@ -22,7 +22,7 @@
     ]
   },
   "easymotion/vim-easymotion": {
-    "desc": "Easy motions for vim movement.",
+    "desc": "Easy motions for vim movement",
     "alts": [
       "justinmk/vim-sneak"
     ],
@@ -33,16 +33,126 @@
     ]
   },
   "honza/vim-snippets": {
-    "desc": "Standard snippets for a variety of languages.",
+    "desc": "Standard snippets for a variety of languages",
     "tags": [
       "snippets"
+    ]
+  },
+  "junegunn/fzf": {
+    "desc": "A general purpose command-line fuzzy finder",
+    "opts": {
+      "dir": "~/.fzf",
+      "do": "./install --all"
+    },
+    "tags": [
+      "command-line",
+      "fuzzy-finder",
+      "linux",
+      "OSX"
+    ]
+  },
+  "junegunn/fzf.vim": {
+    "desc": "Vim integration for fzf fuzzy finder",
+    "tags": [
+      "buffers",
+      "files",
+      "fuzzy-finder",
+      "git",
+      "tags",
+      "windows"
+    ]
+  },
+  "junegunn/goyo.vim": {
+    "desc": "Distraction free writing in Vim",
+    "tags": [
+      "distraction",
+      "writing"
+    ]
+  },
+  "junegunn/gv.vim": {
+    "desc": "A git commit browser",
+    "suggests": [
+      "tpope/vim-fugitive"
+    ],
+    "tags": [
+      "git"
+    ]
+  },
+  "junegunn/limelight.vim": {
+    "desc": "Hyperfocus-writing in Vim",
+    "tags": [
+      "colorscheme",
+      "focus"
+    ]
+  },
+  "junegunn/seoul256.vim": {
+    "desc": "Low-contrast Vim color scheme based on Seoul Colors",
+    "tags": [
+      "colorschemes",
+      "low-contrast"
+    ]
+  },
+  "junegunn/vader.vim": {
+    "desc": "A simple vimscript test framework",
+    "alts": [
+      "google/vroom",
+      "kana/vim-vspec"
+    ],
+    "tags": [
+      "testing",
+      "travis"
+    ]
+  },
+  "junegunn/vim-easy-align": {
+    "desc": "A vim text alignment plugin",
+    "alts": [
+      "godlygeek/tabular"
+    ],
+    "tags": [
+      "alignment",
+      "regex",
+      "tables",
+      "text-objects"
+    ]
+  },
+  "junegunn/vim-emoji": {
+    "desc": "Emoji in vim",
+    "tags": [
+      "emoji",
+      "OSX"
+    ]
+  },
+  "junegunn/vim-github-dashboard": {
+    "desc": "Browse GitHub events (user dashboard, user/repo activity) in Vim",
+    "tags": [
+      "git",
+      "github",
+      "+ruby",
+      "ui"
+    ]
+  },
+  "junegunn/vim-plug": {
+    "desc": "Minimalist vim plugin manager with parallel updates",
+    "alts": [
+      "Shougo/neobundle.vim",
+      "VundleVim/Vundle.vim"
+    ],
+    "tags": [
+      "git",
+      "neovim",
+      "plugin-manager",
+      "python",
+      "+python",
+      "+python3",
+      "ruby",
+      "+ruby"
     ]
   },
   "justinmk/vim-sneak": {
     "alts": [
       "easymotion/vim-easymotion"
     ],
-    "desc": "Slick movement based on searching for characters.",
+    "desc": "Slick movement based on searching for characters",
     "tags": [
       "motion",
       "movement",
@@ -50,12 +160,12 @@
     ]
   },
   "kien/ctrlp.vim": {
+    "desc": "Fuzzy file, buffer, mru... finder",
     "fork": "ctrlpvim/ctrlp.vim",
     "alts": [
       "ctrlpvim/ctrlp.vim",
-      "junegunn/fzf"
+      "junegunn/fzf.vim"
     ],
-    "desc": "Fuzzy file, buffer, mru... finder.",
     "tags": [
       "inactive",
       "indexing",
@@ -80,7 +190,7 @@
     }
   },
   "SirVer/ultisnips": {
-    "desc": "Python based code snippet engine.",
+    "desc": "Python based code snippet engine",
     "suggests": [
       "honza/vim-snippets"
     ],
@@ -90,7 +200,7 @@
     ]
   },
   "Shougo/neocomplete.vim": {
-    "desc": "Lua based code completion engine.",
+    "desc": "Lua based code completion engine",
     "tags": [
       "code-completion",
       "completion",

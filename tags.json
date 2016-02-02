@@ -1,10 +1,28 @@
 {
+  "+python": [
+    "junegunn/vim-plug"
+  ],
+  "+python3": [
+    "junegunn/vim-plug"
+  ],
+  "+ruby": [
+    "junegunn/vim-github-dashboard",
+    "junegunn/vim-plug"
+  ],
+  "OSX": [
+    "junegunn/vim-emoji",
+    "junegunn/fzf"
+  ],
+  "alignment": [
+    "junegunn/vim-easy-align"
+  ],
   "autotools": [
     "rdnetto/YCM-Generator"
   ],
   "buffers": [
     "kien/ctrlp.vim",
-    "ctrlpvim/ctrlp.vim"
+    "ctrlpvim/ctrlp.vim",
+    "junegunn/fzf.vim"
   ],
   "c++": [
     "rdnetto/YCM-Generator",
@@ -18,10 +36,44 @@
     "Valloric/YouCompleteMe",
     "artur-shaik/vim-javacomplete2"
   ],
+  "colorscheme": [
+    "junegunn/limelight.vim"
+  ],
+  "colorschemes": [
+    "junegunn/seoul256.vim"
+  ],
+  "command-line": [
+    "junegunn/fzf"
+  ],
   "completion": [
     "Shougo/neocomplete.vim",
     "Valloric/YouCompleteMe",
     "artur-shaik/vim-javacomplete2"
+  ],
+  "distraction": [
+    "junegunn/goyo.vim"
+  ],
+  "emoji": [
+    "junegunn/vim-emoji"
+  ],
+  "files": [
+    "junegunn/fzf.vim"
+  ],
+  "focus": [
+    "junegunn/limelight.vim"
+  ],
+  "fuzzy-finder": [
+    "junegunn/fzf",
+    "junegunn/fzf.vim"
+  ],
+  "git": [
+    "junegunn/vim-github-dashboard",
+    "junegunn/gv.vim",
+    "junegunn/vim-plug",
+    "junegunn/fzf.vim"
+  ],
+  "github": [
+    "junegunn/vim-github-dashboard"
   ],
   "inactive": [
     "kien/ctrlp.vim"
@@ -32,6 +84,12 @@
   ],
   "java": [
     "artur-shaik/vim-javacomplete2"
+  ],
+  "linux": [
+    "junegunn/fzf"
+  ],
+  "low-contrast": [
+    "junegunn/seoul256.vim"
   ],
   "lua": [
     "Shougo/neocomplete.vim"
@@ -51,13 +109,26 @@
     "kien/ctrlp.vim",
     "ctrlpvim/ctrlp.vim"
   ],
+  "neovim": [
+    "junegunn/vim-plug"
+  ],
+  "plugin-manager": [
+    "junegunn/vim-plug"
+  ],
   "python": [
+    "junegunn/vim-plug",
     "rdnetto/YCM-Generator",
     "Valloric/YouCompleteMe",
     "SirVer/ultisnips"
   ],
   "qmake": [
     "rdnetto/YCM-Generator"
+  ],
+  "regex": [
+    "junegunn/vim-easy-align"
+  ],
+  "ruby": [
+    "junegunn/vim-plug"
   ],
   "search": [
     "kien/ctrlp.vim",
@@ -69,8 +140,30 @@
     "SirVer/ultisnips",
     "honza/vim-snippets"
   ],
+  "tables": [
+    "junegunn/vim-easy-align"
+  ],
   "tags": [
     "kien/ctrlp.vim",
-    "ctrlpvim/ctrlp.vim"
+    "ctrlpvim/ctrlp.vim",
+    "junegunn/fzf.vim"
+  ],
+  "testing": [
+    "junegunn/vader.vim"
+  ],
+  "text-objects": [
+    "junegunn/vim-easy-align"
+  ],
+  "travis": [
+    "junegunn/vader.vim"
+  ],
+  "ui": [
+    "junegunn/vim-github-dashboard"
+  ],
+  "windows": [
+    "junegunn/fzf.vim"
+  ],
+  "writing": [
+    "junegunn/goyo.vim"
   ]
 }

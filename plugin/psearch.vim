@@ -341,8 +341,16 @@ function! s:win_close(...)
 endfunction
 
 function! s:match_str(haystack, needles)
+  let op = '=~?'
   for needle in a:needles
-    if stridx(a:haystack, needle) != -1
+    if needle =~# '[A-Z]'
+      let op = '=~#'
+      break
+    endif
+  endfor
+
+  for needle in a:needles
+    if eval('a:haystack ' . op . ' needle')
       return 1
     endif
   endfor
