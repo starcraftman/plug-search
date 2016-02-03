@@ -37,10 +37,8 @@
     "artur-shaik/vim-javacomplete2"
   ],
   "colorscheme": [
+    "junegunn/seoul256.vim",
     "junegunn/limelight.vim"
-  ],
-  "colorschemes": [
-    "junegunn/seoul256.vim"
   ],
   "command-line": [
     "junegunn/fzf"
@@ -50,9 +48,6 @@
     "Valloric/YouCompleteMe",
     "artur-shaik/vim-javacomplete2"
   ],
-  "distraction": [
-    "junegunn/goyo.vim"
-  ],
   "emoji": [
     "junegunn/vim-emoji"
   ],
@@ -60,6 +55,7 @@
     "junegunn/fzf.vim"
   ],
   "focus": [
+    "junegunn/goyo.vim",
     "junegunn/limelight.vim"
   ],
   "fuzzy-finder": [

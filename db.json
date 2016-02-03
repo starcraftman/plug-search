@@ -67,8 +67,11 @@
   },
   "junegunn/goyo.vim": {
     "desc": "Distraction free writing in Vim",
+    "suggests": [
+      "junegunn/limelight.vim"
+    ],
     "tags": [
-      "distraction",
+      "focus",
       "writing"
     ]
   },
@@ -83,6 +86,9 @@
   },
   "junegunn/limelight.vim": {
     "desc": "Hyperfocus-writing in Vim",
+    "suggests": [
+      "junegunn/goyo.vim"
+    ],
     "tags": [
       "colorscheme",
       "focus"
@@ -91,7 +97,7 @@
   "junegunn/seoul256.vim": {
     "desc": "Low-contrast Vim color scheme based on Seoul Colors",
     "tags": [
-      "colorschemes",
+      "colorscheme",
       "low-contrast"
     ]
   },
