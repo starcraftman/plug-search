@@ -11,9 +11,16 @@ let g:psr_loaded = 1
 let s:loc = {'tab': -1, 'win': -1, 'info': -1}
 let s:orig_loc = []
 let s:lines_put = 0
+
+function! s:path_join(...)
+  let win_shell = (has('win32') || has('win64')) && &shellcmdflag =~ '/'
+  let sep = stridx(a:0, '\') != -1 || win_shell ? '\' : '/'
+  return join(a:000, sep)
+endfunction
+
 let s:root = fnamemodify(resolve(expand('<sfile>:p')), ':h:h')
-let g:psr_plugs = eval(join(readfile(s:root . '/db.json')))
-let g:psr_tags = eval(join(readfile(s:root . '/tags.json')))
+let g:psr_plugs = eval(join(readfile(s:path_join(s:root, 'db.json'))))
+let g:psr_tags = eval(join(readfile(s:path_join(s:root, 'tags.json'))))
 
 function! s:mul_text(text, times)
   let line = ''
@@ -195,14 +202,22 @@ function! s:github_readme()
     let github_uri = s:github_uri(s:parse_plug_name())
     let temp_d = tempname()
     call system(printf('git clone --depth 1 %s %s', github_uri, temp_d))
-    let readme = split(globpath(temp_d, 'README*'))
-    if empty(readme)
-      let readme = split(globpath(temp_d, 'readme*'))
+    if v:shell_error != 0
+      throw 'Missing internet connectivity or git command.'
     endif
 
-    exec 'tabnew ' . readme[0]
-    nnoremap <silent> <buffer> q :bd!<cr>
-    setl buftype=nofile bufhidden=wipe nobuflisted noswapfile nowrap cursorline nomodifiable
+    let docs = split(globpath(temp_d, 'README*'))
+    let docs = s:merge_lists(docs, split(globpath(temp_d, 'readme*')))
+    let docs = s:merge_lists(docs, split(globpath(s:path_join(temp_d, 'doc'), '*.txt')))
+
+    echomsg string(docs)
+    let cmd = 'tabnew '
+    for doc in docs
+      exec cmd . doc
+      nnoremap <silent> <buffer> q :bd!<cr>
+      setl buftype=nofile bufhidden=wipe nobuflisted noswapfile nowrap cursorline nomodifiable
+      let cmd = 'split '
+    endfor
 
     call system('rm -rf ' . temp_d)
   catch
@@ -276,8 +291,7 @@ function! s:open_github()
     return
   endif
   try
-    let plug_name = s:parse_plug_name()
-    silent exec 'OpenBrowser ' . s:github_uri(plug_name)
+    silent exec 'OpenBrowser ' . s:github_uri(s:parse_plug_name())
   catch
     echoerr v:exception
   endtry

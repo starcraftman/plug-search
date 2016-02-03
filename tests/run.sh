@@ -16,13 +16,11 @@ test_dbs() {
   fi
 }
 
-if [ -d "$STAGE" ]; then
-    rm -rf "$STAGE"
+if [ ! -d "$STAGE" ]; then
+  curl -fLo "$STAGE/autoload/plug.vim" --create-dirs \
+      https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim \
+      > /dev/null 2>&1
 fi
-
-curl -fLo "$STAGE/autoload/plug.vim" --create-dirs \
-    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim \
-    > /dev/null 2>&1
 
 cat > $VIMRC <<EOF
 set nocompatible
@@ -71,8 +69,11 @@ EOF
 
 test_dbs
 
+if [ ! -d "$STAGE/plugged" ]; then
+  vim -u "$VIMRC" +PlugInstall +qa > /dev/null 2>&1
+fi
+
 TEST_FILE="$ROOT/tests/test.vader"
-vim -u "$VIMRC" +PlugInstall +qa > /dev/null 2>&1
 if [ "$1" = '!' ]; then
   vim -u "$VIMRC" -c "Vader! $TEST_FILE"
 else

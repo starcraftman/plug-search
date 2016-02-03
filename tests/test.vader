@@ -193,7 +193,7 @@ Expect (Open On Move: Tags):
 
 Execute (Open Github README):
   PSearch
-  normal 4ggO
+  normal 4ggOq
   AssertEqual getline(1), "# ctrlp.vim"
   AssertEqual getline(2), "Full path fuzzy __file__, __buffer__, __mru__, __tag__, __...__ finder for Vim."
   normal q
