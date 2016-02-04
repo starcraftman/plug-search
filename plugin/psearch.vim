@@ -1,8 +1,10 @@
 " plug-search - Find your plugins!
 " ================================
 " TODO: Format inserted lines with = . As go? Only on close?
-" TODO: Code completion
+" TODO: Complete plugin names inside .vimrc
 " TODO: Allow going back forwards with u/ctrl-r, handle nomod
+" TODO: Most recently updated changes mechanism?
+" TODO: Refactor to autoload primarily
 if exists('g:psr_loaded')
   finish
 endif

@@ -1,6 +1,15 @@
 {
+  "*nix": [
+    "junegunn/fzf"
+  ],
+  "+lua": [
+    "Shougo/neocomplete.vim"
+  ],
   "+python": [
-    "junegunn/vim-plug"
+    "Valloric/YouCompleteMe",
+    "junegunn/vim-plug",
+    "SirVer/ultisnips",
+    "rdnetto/YCM-Generator"
   ],
   "+python3": [
     "junegunn/vim-plug"
@@ -10,7 +19,6 @@
     "junegunn/vim-plug"
   ],
   "OSX": [
-    "junegunn/fzf",
     "junegunn/vim-emoji"
   ],
   "alignment": [
@@ -32,6 +40,9 @@
   ],
   "c++": [
     "Valloric/YouCompleteMe",
+    "rdnetto/YCM-Generator"
+  ],
+  "clang": [
     "rdnetto/YCM-Generator"
   ],
   "cmake": [
@@ -97,14 +108,8 @@
   "java": [
     "artur-shaik/vim-javacomplete2"
   ],
-  "linux": [
-    "junegunn/fzf"
-  ],
   "low-contrast": [
     "junegunn/seoul256.vim"
-  ],
-  "lua": [
-    "Shougo/neocomplete.vim"
   ],
   "make": [
     "rdnetto/YCM-Generator"
@@ -128,20 +133,11 @@
     "tpope/vim-pathogen",
     "junegunn/vim-plug"
   ],
-  "python": [
-    "Valloric/YouCompleteMe",
-    "junegunn/vim-plug",
-    "SirVer/ultisnips",
-    "rdnetto/YCM-Generator"
-  ],
   "qmake": [
     "rdnetto/YCM-Generator"
   ],
   "regex": [
     "junegunn/vim-easy-align"
-  ],
-  "ruby": [
-    "junegunn/vim-plug"
   ],
   "search": [
     "justinmk/vim-sneak",

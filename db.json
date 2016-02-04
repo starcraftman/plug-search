@@ -51,8 +51,7 @@
     "tags": [
       "command-line",
       "fuzzy-finder",
-      "linux",
-      "OSX"
+      "*nix"
     ]
   },
   "junegunn/fzf.vim": {
@@ -134,9 +133,9 @@
   "junegunn/vim-github-dashboard": {
     "desc": "Browse GitHub events (user dashboard, user/repo activity) in Vim",
     "tags": [
+      "+ruby",
       "git",
       "github",
-      "+ruby",
       "ui"
     ]
   },
@@ -147,14 +146,12 @@
       "VundleVim/Vundle.vim"
     ],
     "tags": [
-      "git",
-      "neovim",
-      "plugin-manager",
-      "python",
       "+python",
       "+python3",
-      "ruby",
-      "+ruby"
+      "+ruby",
+      "git",
+      "neovim",
+      "plugin-manager"
     ]
   },
   "justinmk/vim-sneak": {
@@ -188,11 +185,12 @@
   "rdnetto/YCM-Generator": {
     "desc": "Generate config files for YouCompleteMe",
     "tags": [
+      "+python",
       "autotools",
+      "clang",
       "c++",
       "cmake",
       "make",
-      "python",
       "qmake"
     ],
     "opts": {
@@ -205,16 +203,16 @@
       "honza/vim-snippets"
     ],
     "tags": [
-      "python",
+      "+python",
       "snippets"
     ]
   },
   "Shougo/neocomplete.vim": {
     "desc": "Lua based code completion engine",
     "tags": [
+      "+lua",
       "code-completion",
-      "completion",
-      "lua"
+      "completion"
     ]
   },
   "tpope/vim-dispatch": {
@@ -251,10 +249,10 @@
       "rdnetto/YCM-Generator"
     ],
     "tags": [
+      "+python",
       "completion",
       "code-completion",
-      "c++",
-      "python"
+      "c++"
     ],
     "opts": {
       "do": "./install.py"
