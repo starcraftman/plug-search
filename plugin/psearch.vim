@@ -65,6 +65,7 @@ endfunction
 function! s:syntax()
   syn clear
   syn match psrComment /[#\-]\+/
+  syn match psrTag     #^<C-G>#
   syn match psrTag     #- .*#hs=s+2
   syn match psrTag     #^[^ \-] #he=e-1
   syn match psrUser    #[0-9a-zA-Z.\-]\+/#me=e-1,he=e-1
@@ -90,29 +91,35 @@ function! s:help(type)
         \ "? Toggle this help text",
         \ "q Close this window",
         \ "Q Close all open windows",
-        \ "i Insert Plug line into starting buffer",
+        \ "i Insert Plug line into original buffer",
         \ "I Same as 'i', then close all windows",
-        \ "o Open plugin or tag under cursor",
-        \ "O Open plugin's github README in a new tab",
+        \ "o More info on a plugin or tag",
+        \ "O Open plugin's README and vimdoc in a new tab",
+        \ "<C-G> Open plugin's github project in your browser",
         \ ]
   else
     let lines =  [
         \ "? Toggle this help text",
         \ "q Close all open windows",
-        \ "i Insert Plug line into starting buffer",
+        \ "i Insert Plug line into original buffer",
         \ "I Same as 'i', then close all windows",
         \ "m Toggle the open on move option",
-        \ "o Open plugin or tag under cursor",
-        \ "O Open plugin's github README in a new tab",
+        \ "o More info on a plugin or tag",
+        \ "O Open plugin's README and vimdoc in a new tab",
+        \ "<C-G> Open plugin's github project in your browser",
         \ ]
   endif
 
   setl modifiable
   if getline(1)[0] != '?'
+    let b:loc = winsaveview()
     let buffer = s:mul_text('#', 30)
     call append(0, lines + [buffer])
+    normal! gg
   else
     exec printf('1,%dd', len(lines) + 1)
+    call winrestview(b:loc)
+    unlet b:loc
   endif
   setl nomodifiable
 endfunction

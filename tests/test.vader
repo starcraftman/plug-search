@@ -81,11 +81,12 @@ Execute (Win Help):
 Expect (Win Help):
   ? Toggle this help text
   q Close all open windows
-  i Insert Plug line into starting buffer
+  i Insert Plug line into original buffer
   I Same as 'i', then close all windows
   m Toggle the open on move option
-  o Open plugin or tag under cursor
-  O Open plugin's github README in a new tab
+  o More info on a plugin or tag
+  O Open plugin's README and vimdoc in a new tab
+  <C-G> Open plugin's github project in your browser
   ##############################
   All Known Plugins
   -----------------
@@ -103,10 +104,11 @@ Expect (Info Help):
   ? Toggle this help text
   q Close this window
   Q Close all open windows
-  i Insert Plug line into starting buffer
+  i Insert Plug line into original buffer
   I Same as 'i', then close all windows
-  o Open plugin or tag under cursor
-  O Open plugin's github README in a new tab
+  o More info on a plugin or tag
+  O Open plugin's README and vimdoc in a new tab
+  <C-G> Open plugin's github project in your browser
   ##############################
   kien/ctrlp.vim
   --------------
