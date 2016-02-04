@@ -438,7 +438,5 @@ endfunction
 
 command! -nargs=* PSearch call s:search(<f-args>)
 command! -nargs=* -complete=customlist,s:tag_names PTags call s:tags(<f-args>)
-command! PT call s:tags('search')
-command! PLoc :echo string(s:orig_loc)
 
 " vim:set et sts=2 sw=2 ts=2:

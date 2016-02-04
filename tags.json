@@ -10,14 +10,20 @@
     "junegunn/vim-plug"
   ],
   "OSX": [
-    "junegunn/vim-emoji",
-    "junegunn/fzf"
+    "junegunn/fzf",
+    "junegunn/vim-emoji"
   ],
   "alignment": [
     "junegunn/vim-easy-align"
   ],
+  "asynchronous": [
+    "tpope/vim-dispatch"
+  ],
   "autotools": [
     "rdnetto/YCM-Generator"
+  ],
+  "background-job": [
+    "tpope/vim-dispatch"
   ],
   "buffers": [
     "kien/ctrlp.vim",
@@ -25,28 +31,34 @@
     "junegunn/fzf.vim"
   ],
   "c++": [
-    "rdnetto/YCM-Generator",
-    "Valloric/YouCompleteMe"
+    "Valloric/YouCompleteMe",
+    "rdnetto/YCM-Generator"
   ],
   "cmake": [
     "rdnetto/YCM-Generator"
   ],
   "code-completion": [
-    "Shougo/neocomplete.vim",
     "Valloric/YouCompleteMe",
+    "Shougo/neocomplete.vim",
     "artur-shaik/vim-javacomplete2"
   ],
   "colorscheme": [
-    "junegunn/seoul256.vim",
-    "junegunn/limelight.vim"
+    "junegunn/limelight.vim",
+    "junegunn/seoul256.vim"
   ],
   "command-line": [
     "junegunn/fzf"
   ],
+  "compiler": [
+    "tpope/vim-dispatch"
+  ],
   "completion": [
-    "Shougo/neocomplete.vim",
     "Valloric/YouCompleteMe",
+    "Shougo/neocomplete.vim",
     "artur-shaik/vim-javacomplete2"
+  ],
+  "defaults": [
+    "tpope/vim-sensible"
   ],
   "emoji": [
     "junegunn/vim-emoji"
@@ -59,12 +71,16 @@
     "junegunn/limelight.vim"
   ],
   "fuzzy-finder": [
+    "kien/ctrlp.vim",
     "junegunn/fzf",
+    "ctrlpvim/ctrlp.vim",
     "junegunn/fzf.vim"
   ],
   "git": [
-    "junegunn/vim-github-dashboard",
     "junegunn/gv.vim",
+    "tpope/vim-fugitive",
+    "junegunn/vim-github-dashboard",
+    "tpope/vim-pathogen",
     "junegunn/vim-plug",
     "junegunn/fzf.vim"
   ],
@@ -109,13 +125,14 @@
     "junegunn/vim-plug"
   ],
   "plugin-manager": [
+    "tpope/vim-pathogen",
     "junegunn/vim-plug"
   ],
   "python": [
-    "junegunn/vim-plug",
-    "rdnetto/YCM-Generator",
     "Valloric/YouCompleteMe",
-    "SirVer/ultisnips"
+    "junegunn/vim-plug",
+    "SirVer/ultisnips",
+    "rdnetto/YCM-Generator"
   ],
   "qmake": [
     "rdnetto/YCM-Generator"
@@ -127,17 +144,23 @@
     "junegunn/vim-plug"
   ],
   "search": [
-    "kien/ctrlp.vim",
-    "ctrlpvim/ctrlp.vim",
     "justinmk/vim-sneak",
-    "easymotion/vim-easymotion"
+    "easymotion/vim-easymotion",
+    "kien/ctrlp.vim",
+    "ctrlpvim/ctrlp.vim"
   ],
   "snippets": [
-    "SirVer/ultisnips",
-    "honza/vim-snippets"
+    "honza/vim-snippets",
+    "SirVer/ultisnips"
+  ],
+  "statusline": [
+    "vim-airline/vim-airline"
   ],
   "tables": [
     "junegunn/vim-easy-align"
+  ],
+  "tabline": [
+    "vim-airline/vim-airline"
   ],
   "tags": [
     "kien/ctrlp.vim",
@@ -145,16 +168,16 @@
     "junegunn/fzf.vim"
   ],
   "testing": [
-    "junegunn/vader.vim"
+    "junegunn/vader.vim",
+    "tpope/vim-dispatch"
   ],
   "text-objects": [
     "junegunn/vim-easy-align"
   ],
-  "travis": [
-    "junegunn/vader.vim"
-  ],
   "ui": [
-    "junegunn/vim-github-dashboard"
+    "vim-airline/vim-airline-themes",
+    "junegunn/vim-github-dashboard",
+    "vim-airline/vim-airline"
   ],
   "windows": [
     "junegunn/fzf.vim"

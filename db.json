@@ -14,11 +14,12 @@
     ],
     "desc": "Fuzzy file, buffer, mru... finder",
     "tags": [
+      "buffers",
+      "fuzzy-finder",
       "indexing",
-      "search",
-      "tags",
       "mru",
-      "buffers"
+      "search",
+      "tags"
     ]
   },
   "easymotion/vim-easymotion": {
@@ -108,8 +109,7 @@
       "kana/vim-vspec"
     ],
     "tags": [
-      "testing",
-      "travis"
+      "testing"
     ]
   },
   "junegunn/vim-easy-align": {
@@ -176,12 +176,13 @@
       "junegunn/fzf.vim"
     ],
     "tags": [
+      "buffers",
+      "fuzzy-finder",
       "inactive",
       "indexing",
-      "search",
-      "tags",
       "mru",
-      "buffers"
+      "search",
+      "tags"
     ]
   },
   "rdnetto/YCM-Generator": {
@@ -216,6 +217,34 @@
       "lua"
     ]
   },
+  "tpope/vim-dispatch": {
+    "desc": "Asynchronous build and test dispatcher",
+    "tags": [
+      "asynchronous",
+      "background-job",
+      "compiler",
+      "testing"
+    ]
+  },
+  "tpope/vim-fugitive": {
+    "desc": "Git wrapper so awesome, it should be illegal",
+    "tags": [
+      "git"
+    ]
+  },
+  "tpope/vim-pathogen": {
+    "desc": "Manage your runtimepath simply",
+    "tags": [
+      "git",
+      "plugin-manager"
+    ]
+  },
+  "tpope/vim-sensible": {
+    "desc": "Default configuration everyone can agree on",
+    "tags": [
+      "defaults"
+    ]
+  },
   "Valloric/YouCompleteMe": {
     "desc": "A code-completion engine for Vim",
     "suggests": [
@@ -230,5 +259,22 @@
     "opts": {
       "do": "./install.py"
     }
+  },
+  "vim-airline/vim-airline": {
+    "desc":  "Lean & mean status/tabline for vim that's light as air",
+    "suggests": [
+      "vim-airline/vim-airline-themes"
+    ],
+    "tags": [
+      "statusline",
+      "tabline",
+      "ui"
+    ]
+  },
+  "vim-airline/vim-airline-themes": {
+    "desc":  "A collection of themes for vim-airline",
+    "tags": [
+      "ui"
+    ]
   }
 }
