@@ -210,10 +210,9 @@ function! s:github_readme()
     let docs = s:merge_lists(docs, split(globpath(temp_d, 'readme*')))
     let docs = s:merge_lists(docs, split(globpath(s:path_join(temp_d, 'doc'), '*.txt')))
 
-    echomsg string(docs)
     let cmd = 'tabnew '
     for doc in docs
-      exec cmd . doc
+      silent exec cmd . doc
       nnoremap <silent> <buffer> q :bd!<cr>
       setl buftype=nofile bufhidden=wipe nobuflisted noswapfile nowrap cursorline nomodifiable
       let cmd = 'split '
@@ -280,7 +279,7 @@ function! s:open_type()
     try
       call s:info_on_plugin()
     catch
-      echoerr 'Could not parse plugin or tag.'
+      echoerr v:exception
     endtry
   endtry
 endfunction
