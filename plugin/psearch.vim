@@ -5,6 +5,7 @@
 " TODO: Allow going back forwards with u/ctrl-r, handle nomod
 " TODO: Most recently updated changes mechanism?
 " TODO: Refactor to autoload primarily
+" TODO: Consider tag/plugin categories like vimawesome.
 if exists('g:psr_loaded')
   finish
 endif

@@ -215,6 +215,16 @@
       "completion"
     ]
   },
+  "starcraftman/plug-search": {
+    "desc": "A plugin to discover other plugins",
+    "suggests": [
+      "junegunn/vim-plug",
+      "tyru/open-browser.vim"
+    ],
+    "tags": [
+      "search"
+    ]
+  },
   "tpope/vim-dispatch": {
     "desc": "Asynchronous build and test dispatcher",
     "tags": [
@@ -241,6 +251,13 @@
     "desc": "Default configuration everyone can agree on",
     "tags": [
       "defaults"
+    ]
+  },
+  "tyru/open-browser.vim": {
+    "desc": "Open URI with your favorite browser from your most favorite editor",
+    "tags": [
+      "browser",
+      "search"
     ]
   },
   "Valloric/YouCompleteMe": {

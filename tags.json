@@ -33,6 +33,9 @@
   "background-job": [
     "tpope/vim-dispatch"
   ],
+  "browser": [
+    "tyru/open-browser.vim"
+  ],
   "buffers": [
     "kien/ctrlp.vim",
     "ctrlpvim/ctrlp.vim",
@@ -143,6 +146,8 @@
     "justinmk/vim-sneak",
     "easymotion/vim-easymotion",
     "kien/ctrlp.vim",
+    "tyru/open-browser.vim",
+    "starcraftman/plug-search",
     "ctrlpvim/ctrlp.vim"
   ],
   "snippets": [
