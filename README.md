@@ -1,4 +1,4 @@
-# vim-plug-search
+# plug-search
 
 [![Travis][TravisShield]][TravisDash]
 
