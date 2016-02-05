@@ -2,6 +2,22 @@
 
 [![Travis][TravisShield]][TravisDash]
 
+## Installation
+
+To install using vim-plug:
+
+```viml
+Plug 'starcraftman/plug-search' | Plug 'tyru/open-browser.vim'
+```
+
+## Demo
+
+A short demo of current features.
+
+[![Short Demo][DemoGif]][DemoText]
+
+## Notes
+
 Placeholder for an idea I had as a semi-official extension to vim-plug.
 Based on a small snippet I remember seeing from junegunn completing from vim-awesome.
 I don't think it quite fits inside vim-plug given the db, so better as a plugin itself.
@@ -41,7 +57,9 @@ Handy programs:
   - Deompress/pretty database: `jq '.' db.json > db.json`
 
 <!-- Links -->
-[TravisShield]: https://travis-ci.org/starcraftman/vim-plug-search.svg?branch=master
-[TravisDash]: https://travis-ci.org/starcraftman/pakit
+[TravisShield]: https://travis-ci.org/starcraftman/plug-search.svg?branch=master
+[TravisDash]: https://travis-ci.org/starcraftman/plug-search
+[DemoGif]: https://github.com/starcraftman/plug-search/raw/master/demo.gif
+[DemoText]: https://github.com/starcraftman/plug-search/blob/master/README.md
 [jq]: https://stedolan.github.io/jq
 [jsonlint]: https://github.com/zaach/jsonlint
