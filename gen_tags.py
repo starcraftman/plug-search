@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 """
 Module to re(generate) tags.json database.
-Do NOT edit the tags.json file.
 """
 from __future__ import absolute_import
 
@@ -25,17 +24,15 @@ def create_args_parser():
     Generate the tags.json database that maps
     tags onto plugin names.
 
-    Do NOT edit the tags.json file.
-    To update tags, edit db.json and regenerate.
+    Do NOT edit the generated file. Just regenerate it.
     """.format(prog_name.capitalize(), prog_name)
     mesg = mesg[0:-5]
     parser = argparse.ArgumentParser(prog=prog_name, description=mesg,
                                      formatter_class=RawDescriptionHelp)
-    parser.add_argument('-i', '--input',
-                        default=os.path.join(ROOT, 'db.json'),
+    parser.add_argument('input', default=os.path.join(ROOT, 'db.json'),
                         help='input json file to transform into tags')
-    parser.add_argument('-o', '--output',
-                        help='output json, by default tags.json in input dir')
+    parser.add_argument('output', nargs='?',
+                        help='output json, by default tags.json')
 
     return parser
 
