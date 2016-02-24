@@ -1,13 +1,15 @@
 " plug-search - Find your plugins!
 " ================================
-" TODO: Format inserted lines with = . As go? Only on close?
+" Ordered by prioity.
+" TODO: Consider tag/plugin categories like vimawesome
+"       Use folds, i.e.  setl foldlevel=indent foldminlines=1
+" TODO: Refactor to autoload, delay json eval to first call
+" TODO: Most recently updated changes mechanism
+" TODO: Support Vundle/NeoBundle/VAM/other via adapters or such
 " TODO: Complete plugin names inside .vimrc
 " TODO: Allow going back forwards with u/ctrl-r, handle nomod
-" TODO: Most recently updated changes mechanism?
-" TODO: Refactor to autoload primarily
-" TODO: Consider tag/plugin categories like vimawesome.
-" TODO: Support Vundle/NeoBundle/VAM/other via adapters or such
 " TODO: Support external database, pulled down then post processed
+" TODO: Format inserted lines with = . As go? Only on close?
 if exists('g:psr_loaded')
   finish
 endif
